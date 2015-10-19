@@ -23,12 +23,14 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "can-ha-protocol.h"
+#include "../inc/can-ha-protocol.h"
+#include "can-ha-protocol-conf.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+Single_IndicationTypeDef Single_Indication[SINGLE_INDICATION_SIZE];
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -116,9 +118,10 @@ void Single_Indication_Init(void) {
   */
 void Single_Indication_Refresh(void) {
   uint_fast8_t i;
-  uint_least8_t second = (uint_least8_t)(RTC_GetCounter() % 60);
+  uint32_t tmp_RTC_Counter = RTC_GetCounter();
+
   for (i = SINGLE_INDICATION_SIZE; i; i--) {
-    if ( second == Single_Indication[i-1].TimestampSecond ) {
+    if ( (tmp_RTC_Counter - Single_Indication[i-1].Timestamp) % 60 ) {
       CAN_TxMsgHandle(EM, CAN_RTR_DATA, Laenge_EM, Single_Indication[i-1].Identifier, &Single_Indication[i-1].State);
     }
   }
@@ -132,7 +135,7 @@ void Single_Indication_Refresh(void) {
 void Single_Indication_Write(uint_least32_t ObjectNumber, bool NewState) {
   if (Single_Indication[ObjectNumber].State != NewState) {
     Single_Indication[ObjectNumber].State = NewState;
-    Single_Indication[ObjectNumber].TimestampSecond = (uint_least8_t)(RTC_GetCounter() % 60);
+    Single_Indication[ObjectNumber].Timestamp = RTC_GetCounter();
     CAN_TxMsgHandle(EM, CAN_RTR_DATA, Laenge_EM, Single_Indication[ObjectNumber].Identifier, &Single_Indication[ObjectNumber].State);
   }
 }
