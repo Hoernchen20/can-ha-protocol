@@ -31,24 +31,24 @@
 
 /* Exported constants --------------------------------------------------------*/
 /* Message Types */
-#define MEASURED_VALUE_16       2030    //0b0111 1110 1110, 0x7EE
-#define MV_16                   2030    //0b0111 1110 1110, 0x7EE
-#define MEASURED_VALUE_32       2020    //0b0111 1110 0100, 0x7E4
-#define MV_32                   2020    //0b0111 1110 0100, 0x7E4
-#define SETPOINT_COMMAND_16     2010    //0b0111 1101 1010, 0x7DA
-#define SPC_16                  2010    //0b0111 1101 1010, 0x7DA
-#define SETPOINT_COMMAND_32     2000    //0b0111 1101 0000, 0x7D0
-#define SPC_32                  2000    //0b0111 1101 0000, 0x7D0
-#define SINGLE_INDICATION       1990    //0b0111 1100 0110, 0x7C6
-#define SI                      1990    //0b0111 1100 0110, 0x7C6
-#define DOUBLE_INDICATION       1980    //0b0111 1011 1100, 0x7BC
-#define DI                      1980    //0b0111 1011 1100, 0x7BC
-#define SINGLE_COMMAND          1970    //0b0111 1011 0010, 0x7B2
-#define SC                      1970    //0b0111 1011 0010, 0x7B2
-#define DOUBLE_COMMAND          1960    //0b0111 1010 1000, 0x7A8
-#define DC                      1960    //0b0111 1010 1000, 0x7A8
-#define CLOCK_SYNC              1950    //0b0111 1001 1110, 0x79E
-#define HEARTBEAT               1940    //0b0111 1001 0100, 0x794
+#define TYPE_MEASURED_VALUE_16       2030    //0b0111 1110 1110, 0x7EE
+#define TYPE_MV_16                   2030    //0b0111 1110 1110, 0x7EE
+#define TYPE_MEASURED_VALUE_32       2020    //0b0111 1110 0100, 0x7E4
+#define TYPE_MV_32                   2020    //0b0111 1110 0100, 0x7E4
+#define TYPE_SETPOINT_COMMAND_16     2010    //0b0111 1101 1010, 0x7DA
+#define TYPE_SPC_16                  2010    //0b0111 1101 1010, 0x7DA
+#define TYPE_SETPOINT_COMMAND_32     2000    //0b0111 1101 0000, 0x7D0
+#define TYPE_SPC_32                  2000    //0b0111 1101 0000, 0x7D0
+#define TYPE_SINGLE_INDICATION       1990    //0b0111 1100 0110, 0x7C6
+#define TYPE_SI                      1990    //0b0111 1100 0110, 0x7C6
+#define TYPE_DOUBLE_INDICATION       1980    //0b0111 1011 1100, 0x7BC
+#define TYPE_DI                      1980    //0b0111 1011 1100, 0x7BC
+#define TYPE_SINGLE_COMMAND          1970    //0b0111 1011 0010, 0x7B2
+#define TYPE_SC                      1970    //0b0111 1011 0010, 0x7B2
+#define TYPE_DOUBLE_COMMAND          1960    //0b0111 1010 1000, 0x7A8
+#define TYPE_DC                      1960    //0b0111 1010 1000, 0x7A8
+#define TYPE_CLOCK_SYNC              1950    //0b0111 1001 1110, 0x79E
+#define TYPE_HEARTBEAT               1940    //0b0111 1001 0100, 0x794
 
 /* Data length of message types */
 #define LENGTH_MEASURED_VALUE_16      2
@@ -77,19 +77,66 @@
   typedef enum { FALSE, TRUE }bool;
 #endif
 
+/* Functionpointer */
+typedef void (*SingleCommand_Function) (uint_least8_t);
+typedef void (*DoubleCommand_Function) (uint_least8_t);
+typedef void (*SetPoint16_Function) (int16_t);
+typedef void (*SetPoint32_Function) (int32_t);
+
+/* Structs for message types */
 typedef struct {
-  uint_least32_t  Identifier;
-  uint32_t        Timestamp;
-  uint_least8_t   State;
-  uint_least8_t   padding[3];
-}Single_IndicationTypeDef;
+  const uint_least32_t  Identifier;
+  uint32_t              Timestamp;
+  uint_least8_t         State;
+  uint_least8_t         padding[3];
+}SingleIndication_TypeDef;
 
 typedef struct {
   uint_least32_t  Identifier;
   uint32_t        Timestamp;
   uint_least8_t   State;
   uint_least8_t   padding[3];
-}Double_IndicationTypeDef;
+}DoubleIndication_TypeDef;
+
+typedef struct {
+  uint_least32_t  Identifier;
+  uint32_t        Timestamp;
+  int_least16_t   Value;
+  uint_least8_t   padding[2];
+}MeasuredValue16_TypeDef;
+
+typedef struct {
+  uint_least32_t  Identifier;
+  uint32_t        Timestamp;
+  int_least32_t   Value;
+}MeasuredValue32_TypeDef;
+
+typedef struct {
+  uint_least32_t          Identifier;
+  SingleCommand_Function  Function;
+  int_least8_t            State;
+  uint_least8_t           padding[3];
+}SingleCommand_TypeDef;
+
+typedef struct {
+  uint_least32_t          Identifier;
+  DoubleCommand_Function  Function;
+  int_least8_t            State;
+  uint_least8_t           padding[3];
+}DoubleCommand_TypeDef;
+
+typedef struct {
+  uint_least32_t        Identifier;
+  SetPoint16_Function   Function;
+  int_least16_t         Value;
+  uint_least8_t         padding[2];
+}SetPoint16_TypeDef;
+
+typedef struct {
+  uint_least32_t        Identifier;
+  SetPoint32_Function   Function;
+  int_least32_t         Value;
+}SetPoint32_TypeDef;
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
