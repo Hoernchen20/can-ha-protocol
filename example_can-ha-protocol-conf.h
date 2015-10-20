@@ -23,9 +23,10 @@
 
 
 /* Size of single indications */
-#define TX_SINGLE_INDICATION_SIZE 2
+#define TX_SINGLE_INDICATION_SIZE   2
+#define RX_SINGLE_INDICATION_SIZE   2
 
-/* Identifier of single indications */
+/* Identifier of send single indications */
 #define TX_SINGLE_INDICATION_0_ID   SCHLAFZIMMER_FENSTER
 #define TX_SINGLE_INDICATION_1_ID   SCHLAFZIMMER_HEIZUNG
 #define TX_SINGLE_INDICATION_2_ID   15002
@@ -46,3 +47,16 @@
 #define TX_SINGLE_INDICATION_17_ID  15017
 #define TX_SINGLE_INDICATION_18_ID  15018
 #define TX_SINGLE_INDICATION_19_ID  15019
+
+/* Size of measured values */
+#define TX_MEASURED_VALUE_16_SIZE   1
+#define RX_MEASURED_VALUE_16_SIZE   1
+
+/* Identifier of send measured values */
+#define TX_MEASURED_VALUE_16_0_ID   Schlafzimmer_Solltemperatur_RM
+#define TX_MEASURED_VALUE_16_1_ID   19001
+
+/* Identifier of receive measured values */
+#define RX_MEASURED_VALUE_16_0_ID   Testboard_Temperatur
+#define RX_MEASURED_VALUE_16_1_ID   20001
+

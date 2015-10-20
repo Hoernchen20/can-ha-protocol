@@ -85,10 +85,10 @@ typedef void (*SetPoint32_Function) (int32_t);
 
 /* Structs for message types */
 typedef struct {
-  const uint_least32_t  Identifier;
-  uint32_t              Timestamp;
-  uint_least8_t         State;
-  uint_least8_t         padding[3];
+  uint_least32_t  Identifier;
+  uint32_t        Timestamp;
+  uint_least8_t   State;
+  uint_least8_t   padding[3];
 }SingleIndication_TypeDef;
 
 typedef struct {
@@ -144,5 +144,8 @@ void Config_CAN_HA_Protocol(void);
 void Single_Indication_Init(void);
 void Single_Indication_Refresh(void);
 void Single_Indication_Write(uint_least32_t ObjectNumber, bool NewState);
+void Measured_Value_16_Init(void);
+void Measured_Value_16_Refresh(void);
+void Measured_Value_16_Write(uint_least32_t ObjectNumber, int16_t NewValue);
 
 #endif /* CAN_HA_PROTOCOL_H_ */
