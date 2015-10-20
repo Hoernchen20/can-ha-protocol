@@ -33,7 +33,7 @@
 /* Message Types */
 #define MEASURED_VALUE_16       2030    //0b0111 1110 1110, 0x7EE
 #define MV_16                   2030    //0b0111 1110 1110, 0x7EE
-#define MEASURED_VALUE          2020    //0b0111 1110 0100, 0x7E4
+#define MEASURED_VALUE_32       2020    //0b0111 1110 0100, 0x7E4
 #define MV_32                   2020    //0b0111 1110 0100, 0x7E4
 #define SETPOINT_COMMAND_16     2010    //0b0111 1101 1010, 0x7DA
 #define SPC_16                  2010    //0b0111 1101 1010, 0x7DA
@@ -49,6 +49,26 @@
 #define DC                      1960    //0b0111 1010 1000, 0x7A8
 #define CLOCK_SYNC              1950    //0b0111 1001 1110, 0x79E
 #define HEARTBEAT               1940    //0b0111 1001 0100, 0x794
+
+/* Data length of message types */
+#define LENGTH_MEASURED_VALUE_16      2
+#define LENGTH_MV_16                  2
+#define LENGTH_MEASURED_VALUE_32      4
+#define LENGTH_MV_32                  4
+#define LENGTH_SET_POINT_COMMAND_16   2
+#define LENGTH_SPC_16                 2 
+#define LENGTH_SET_POINT_COMMAND_32   4
+#define LENGTH_SPC_32                 4
+#define LENGTH_SINGLE_INDICATION      1
+#define LENGTH_SI                     1
+#define LENGTH_DOUBLE_INDICATION      1
+#define LENGTH_DI                     1
+#define LENGTH_SINGLE_COMMAND         1
+#define LENGTH_SC                     1
+#define LENGTH_DOUBLE_COMMAND         1
+#define LENGTH_DC                     1
+#define LENGTH_CLOCK_SYNC             7
+#define LENGTH_HEARTBEAT              1
 
 /* Exported variables --------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/
