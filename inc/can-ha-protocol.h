@@ -139,7 +139,7 @@ typedef struct {
 }SetPoint32_TypeDef;
 
 /* Exported macro ------------------------------------------------------------*/
-/* Exported functions ------------------------------------------------------- */
+/* Exported functions --------------------------------------------------------*/
 void Config_CAN_HA_Protocol(void);
 void Single_Indication_Init(void);
 void Single_Indication_Refresh(void);
@@ -147,5 +147,8 @@ void Single_Indication_Write(uint_least32_t ObjectNumber, bool NewState);
 void Measured_Value_16_Init(void);
 void Measured_Value_16_Refresh(void);
 void Measured_Value_16_Write(uint_least32_t ObjectNumber, int16_t NewValue);
+void Measured_Value_32_Init(void);
+void Measured_Value_32_Refresh(void);
+void Measured_Value_32_Write(uint_least32_t ObjectNumber, int32_t NewValue);
 
 #endif /* CAN_HA_PROTOCOL_H_ */
