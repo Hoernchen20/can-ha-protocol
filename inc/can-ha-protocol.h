@@ -1,7 +1,11 @@
-/*
- * can-ha-protocol.h
+/**
+ * @file    can-ha-protocol.h
+ * @author  Felix Horn
+ * @version 0.1
+ * @date    25-Oct-2015
+ * @brief   This file contains all the defines and functions prototypes for the
+ *          CAN HomeAutomation Protocol.
  *
- * Copyright 2015  Felix Horn
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -84,6 +88,12 @@ typedef void (*SetPoint16_Function) (int16_t);
 typedef void (*SetPoint32_Function) (int32_t);
 
 /* Structs for message types */
+
+/**
+  * @brief  Test Überschrift
+  *
+  * Hallo JAkjewnfkldsnvn wehf lanf gwipogj aljg
+  */
 typedef struct {
   uint_least32_t  Identifier;
   uint32_t        Timestamp;
