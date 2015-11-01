@@ -32,6 +32,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
 #include "can_communication.h"
+#include "rtc.h"
 
 /* Exported constants --------------------------------------------------------*/
 /* Message Types */

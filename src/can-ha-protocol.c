@@ -44,7 +44,7 @@ MeasuredValue16_TypeDef RX_Measured_Value_16[RX_MEASURED_VALUE_16_SIZE];
   */
 void Config_CAN_HA_Protocol(void) {
   Single_Indication_Init();
-  //Measured_Value_16_Init();
+  Measured_Value_16_Init();
 }
 
 /**
@@ -122,7 +122,7 @@ void Single_Indication_Init(void) {
   */
 void Single_Indication_Refresh(void) {
   uint_fast8_t i;
-  uint32_t tmp_RTC_Counter = RTC_GetCounter();
+  uint32_t tmp_RTC_Counter = RTC_GetUnixTime();
 
   for (i = TX_SINGLE_INDICATION_SIZE; i; i--) {
     if ( (tmp_RTC_Counter - TX_Single_Indication[i-1].Timestamp) % 60 == 0) {
@@ -140,7 +140,7 @@ void Single_Indication_Refresh(void) {
 void Single_Indication_Write(uint_least32_t ObjectNumber, bool NewState) {
   if (TX_Single_Indication[ObjectNumber].State != NewState) {
     TX_Single_Indication[ObjectNumber].State = NewState;
-    TX_Single_Indication[ObjectNumber].Timestamp = RTC_GetCounter();
+    TX_Single_Indication[ObjectNumber].Timestamp = RTC_GetUnixTime();
     CAN_TxMsgHandle(TYPE_SINGLE_INDICATION, CAN_RTR_DATA, LENGTH_SINGLE_INDICATION,
         TX_Single_Indication[ObjectNumber].Identifier, &TX_Single_Indication[ObjectNumber].State);
   }
@@ -176,7 +176,7 @@ void Measured_Value_16_Init(void) {
   */
 void Measured_Value_16_Refresh(void) {
   uint_fast8_t i;
-  uint32_t tmp_RTC_Counter = RTC_GetCounter();
+  uint32_t tmp_RTC_Counter = RTC_GetUnixTime();
 
   for (i = TX_MEASURED_VALUE_16_SIZE; i; i--) {
     if ( (tmp_RTC_Counter - TX_Measured_Value_16[i-1].Timestamp) % 60 == 0 ) {
@@ -197,7 +197,7 @@ void Measured_Value_16_Refresh(void) {
 void Measured_Value_16_Write(uint_least32_t ObjectNumber, int16_t NewValue) {
   if (TX_Measured_Value_16[ObjectNumber].Value != NewValue) {
     TX_Measured_Value_16[ObjectNumber].Value = NewValue;
-    TX_Measured_Value_16[ObjectNumber].Timestamp = RTC_GetCounter();
+    TX_Measured_Value_16[ObjectNumber].Timestamp = RTC_GetUnixTime();
 
     uint_least8_t tmp[2];
     tmp[1] = (uint8_t)(TX_Measured_Value_16[ObjectNumber].Value);
