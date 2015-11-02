@@ -24,7 +24,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "../inc/can-ha-protocol.h"
-#include "can-ha-protocol-conf.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -72,8 +71,10 @@
 /* Private variables ---------------------------------------------------------*/
 SingleIndication_TypeDef TX_Single_Indication[TX_SINGLE_INDICATION_SIZE];
 SingleIndication_TypeDef RX_Single_Indication[RX_SINGLE_INDICATION_SIZE];
-MeasuredValue16_TypeDef TX_Measured_Value_16[TX_MEASURED_VALUE_16_SIZE];
-MeasuredValue16_TypeDef RX_Measured_Value_16[RX_MEASURED_VALUE_16_SIZE];
+MeasuredValue16_TypeDef  TX_Measured_Value_16[TX_MEASURED_VALUE_16_SIZE];
+MeasuredValue16_TypeDef  RX_Measured_Value_16[RX_MEASURED_VALUE_16_SIZE];
+MeasuredValue32_TypeDef  TX_Measured_Value_32[TX_MEASURED_VALUE_32_SIZE];
+MeasuredValue32_TypeDef  RX_Measured_Value_32[RX_MEASURED_VALUE_32_SIZE];
 
 /* Private function prototypes -----------------------------------------------*/
 static void Single_Indication_Init(void);
@@ -90,6 +91,51 @@ void Config_CAN_HA_Protocol(void) {
     Single_Indication_Init();
     Measured_Value_16_Init();
     Measured_Value_32_Init();
+}
+
+/**
+  * @brief  Periodic send of Data. Should be start every second.
+  * @param  None
+  * @retval None
+  */
+void CAN_HA_Refresh(void) {
+    uint_fast8_t i;
+    uint32_t tmp_RTC_Counter = RTC_GetUnixTime();
+
+    /* Single Indication */
+    for (i = TX_SINGLE_INDICATION_SIZE; i; i--) {
+        if ( (tmp_RTC_Counter - TX_Single_Indication[i-1].Timestamp) % 60 == 0) {
+            CAN_TxMsgHandle(TYPE_SINGLE_INDICATION, CAN_RTR_DATA, LENGTH_SINGLE_INDICATION,
+                TX_Single_Indication[i-1].Identifier, &TX_Single_Indication[i-1].State);
+        }
+    }
+
+    /* Double Indication */
+
+
+    /* Measured Value 16bit */
+    for (i = TX_MEASURED_VALUE_16_SIZE; i; i--) {
+        if ( (tmp_RTC_Counter - TX_Measured_Value_16[i-1].Timestamp) % 60 == 0 ) {
+            uint_least8_t tmp[2];
+            tmp[1] = (uint8_t)(TX_Measured_Value_16[i-1].Value);
+            tmp[0] = (uint8_t)(TX_Measured_Value_16[i-1].Value>>8);
+            CAN_TxMsgHandle(TYPE_MEASURED_VALUE_16, CAN_RTR_DATA, LENGTH_MEASURED_VALUE_16,
+                TX_Measured_Value_16[i-1].Identifier, tmp);
+        }
+    }
+
+    /* Measured Value 32bit */
+    for (i = TX_MEASURED_VALUE_32_SIZE; i; i--) {
+        if ( (tmp_RTC_Counter - TX_Measured_Value_32[i-1].Timestamp) % 60 == 0 ) {
+            uint_least8_t tmp[4];
+            tmp[3] = (uint8_t)(TX_Measured_Value_32[i-1].Value);
+            tmp[2] = (uint8_t)(TX_Measured_Value_32[i-1].Value>>8);
+            tmp[1] = (uint8_t)(TX_Measured_Value_32[i-1].Value>>16);
+            tmp[0] = (uint8_t)(TX_Measured_Value_32[i-1].Value>>24);
+            CAN_TxMsgHandle(TYPE_MEASURED_VALUE_32, CAN_RTR_DATA, LENGTH_MEASURED_VALUE_32,
+                TX_Measured_Value_32[i-1].Identifier, tmp);
+        }
+    }
 }
 
 /**
@@ -159,23 +205,6 @@ static void Single_Indication_Init(void) {
     TX_Single_Indication[19].Identifier = TX_SINGLE_INDICATION_19_ID;
 #endif
   }
-
-/**
-  * @brief  This function sends the single indications and should be run every second.
-  * @param  None
-  * @retval None
-  */
-void Single_Indication_Refresh(void) {
-    uint_fast8_t i;
-    uint32_t tmp_RTC_Counter = RTC_GetUnixTime();
-
-    for (i = TX_SINGLE_INDICATION_SIZE; i; i--) {
-        if ( (tmp_RTC_Counter - TX_Single_Indication[i-1].Timestamp) % 60 == 0) {
-            CAN_TxMsgHandle(TYPE_SINGLE_INDICATION, CAN_RTR_DATA, LENGTH_SINGLE_INDICATION,
-                TX_Single_Indication[i-1].Identifier, &TX_Single_Indication[i-1].State);
-        }
-    }
-}
 
 /**
   * @brief  This function change state of the single indications and send them.
@@ -320,26 +349,6 @@ static void Measured_Value_16_Init(void) {
 #if RX_MEASURED_VALUE_16_SIZE >= 20
     RX_Measured_Value_16[19].Identifier = RX_MEASURED_VALUE_16_19_ID;
 #endif
-}
-
-/**
-  * @brief  This function sends the 16bit measured values and should be run every second.
-  * @param  None
-  * @retval None
-  */
-void Measured_Value_16_Refresh(void) {
-    uint_fast8_t i;
-    uint32_t tmp_RTC_Counter = RTC_GetUnixTime();
-
-    for (i = TX_MEASURED_VALUE_16_SIZE; i; i--) {
-        if ( (tmp_RTC_Counter - TX_Measured_Value_16[i-1].Timestamp) % 60 == 0 ) {
-            uint_least8_t tmp[2];
-            tmp[1] = (uint8_t)(TX_Measured_Value_16[i-1].Value);
-            tmp[0] = (uint8_t)(TX_Measured_Value_16[i-1].Value>>8);
-            CAN_TxMsgHandle(TYPE_MEASURED_VALUE_16, CAN_RTR_DATA, LENGTH_MEASURED_VALUE_16,
-                TX_Measured_Value_16[i-1].Identifier, tmp);
-        }
-    }
 }
 
 /**
@@ -492,28 +501,6 @@ static void Measured_Value_32_Init(void) {
 }
 
 /**
-  * @brief  This function sends the 32bit measured values and should be run every second.
-  * @param  None
-  * @retval None
-  */
-void Measured_Value_32_Refresh(void) {
-    uint_fast8_t i;
-    uint32_t tmp_RTC_Counter = RTC_GetUnixTime();
-
-    for (i = TX_MEASURED_VALUE_32_SIZE; i; i--) {
-        if ( (tmp_RTC_Counter - TX_Measured_Value_32[i-1].Timestamp) % 60 == 0 ) {
-            uint_least8_t tmp[4];
-            tmp[3] = (uint8_t)(TX_Measured_Value_32[i-1].Value);
-            tmp[2] = (uint8_t)(TX_Measured_Value_32[i-1].Value>>8);            
-            tmp[1] = (uint8_t)(TX_Measured_Value_32[i-1].Value>>16);
-            tmp[0] = (uint8_t)(TX_Measured_Value_32[i-1].Value>>24);
-            CAN_TxMsgHandle(TYPE_MEASURED_VALUE_32, CAN_RTR_DATA, LENGTH_MEASURED_VALUE_32,
-                TX_Measured_Value_32[i-1].Identifier, tmp);
-        }
-    }
-}
-
-/**
   * @brief  This function change value of the 32bit measured value and send them.
   * @param  New Value: Floating Point Value
   * @retval None
@@ -524,10 +511,10 @@ void Measured_Value_32_Write(uint_least32_t ObjectNumber, int32_t NewValue) {
         TX_Measured_Value_32[ObjectNumber].Timestamp = RTC_GetUnixTime();
 
         uint_least8_t tmp[4];
-        tmp[3] = (uint8_t)(TX_Measured_Value_32[i-1].Value);
-        tmp[2] = (uint8_t)(TX_Measured_Value_32[i-1].Value>>8);            
-        tmp[1] = (uint8_t)(TX_Measured_Value_32[i-1].Value>>16);
-        tmp[0] = (uint8_t)(TX_Measured_Value_32[i-1].Value>>24);
+        tmp[3] = (uint8_t)(TX_Measured_Value_32[ObjectNumber].Value);
+        tmp[2] = (uint8_t)(TX_Measured_Value_32[ObjectNumber].Value>>8);
+        tmp[1] = (uint8_t)(TX_Measured_Value_32[ObjectNumber].Value>>16);
+        tmp[0] = (uint8_t)(TX_Measured_Value_32[ObjectNumber].Value>>24);
         CAN_TxMsgHandle(TYPE_MEASURED_VALUE_32, CAN_RTR_DATA, LENGTH_MEASURED_VALUE_32,
             TX_Measured_Value_32[ObjectNumber].Identifier, tmp);
     }
