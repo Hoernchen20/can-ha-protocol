@@ -136,6 +136,15 @@ void CAN_HA_Refresh(void) {
                 TX_Measured_Value_32[i-1].Identifier, tmp);
         }
     }
+
+    /* Heartbeat */
+    static uint_fast8_t Heartbeat_Cnt = 0;
+    Heartbeat_Cnt++;
+    if (Heartbeat_Cnt > HEARTBEAT_TIME) {
+        Heartbeat_Cnt = 0;
+        uint_least8_t Status = TRUE;
+        CAN_TxMsgHandle(HEARTBEAT, CAN_RTR_DATA, 1, NODE_ID, &Status);
+    }
 }
 
 /**
