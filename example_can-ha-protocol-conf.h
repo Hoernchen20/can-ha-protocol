@@ -1,4 +1,4 @@
-/*
+﻿/*
  * example_can-ha-protocol-conf.h
  *
  * Copyright 2015  Felix Horn
@@ -23,8 +23,9 @@
 
 
 /* General configuration -----------------------------------------------------*/
-#define NODE_ID
-#defnie HEARTBEAT_ID
+#define NODE_ID         666
+#define HEARTBEAT_TIME  20
+#define REFRESH_TIME    60
 
 /* Single Indications --------------------------------------------------------*/
 /* Size of single indications */

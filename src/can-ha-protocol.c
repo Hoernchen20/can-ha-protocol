@@ -104,18 +104,23 @@ void CAN_HA_Refresh(void) {
 
     /* Single Indication */
     for (i = TX_SINGLE_INDICATION_SIZE; i; i--) {
-        if ( (tmp_RTC_Counter - TX_Single_Indication[i-1].Timestamp) % 60 == 0) {
+        if ( (tmp_RTC_Counter - TX_Single_Indication[i-1].Timestamp) % REFRESH_TIME == 0) {
             CAN_TxMsgHandle(TYPE_SINGLE_INDICATION, CAN_RTR_DATA, LENGTH_SINGLE_INDICATION,
                 TX_Single_Indication[i-1].Identifier, &TX_Single_Indication[i-1].State);
         }
     }
 
     /* Double Indication */
-
+    for (i = TX_DOUBLE_INDICATION_SIZE; i; i--) {
+        if ( (tmp_RTC_Counter - TX_Double_Indication[i-1].Timestamp) % REFRESH_TIME == 0) {
+            CAN_TxMsgHandle(TYPE_Double_INDICATION, CAN_RTR_DATA, LENGTH_DOUBLE_INDICATION,
+                TX_Double_Indication[i-1].Identifier, &TX_Double_Indication[i-1].State);
+        }
+    }
 
     /* Measured Value 16bit */
     for (i = TX_MEASURED_VALUE_16_SIZE; i; i--) {
-        if ( (tmp_RTC_Counter - TX_Measured_Value_16[i-1].Timestamp) % 60 == 0 ) {
+        if ( (tmp_RTC_Counter - TX_Measured_Value_16[i-1].Timestamp) % REFRESH_TIME == 0 ) {
             uint_least8_t tmp[2];
             tmp[1] = (uint8_t)(TX_Measured_Value_16[i-1].Value);
             tmp[0] = (uint8_t)(TX_Measured_Value_16[i-1].Value>>8);
@@ -126,7 +131,7 @@ void CAN_HA_Refresh(void) {
 
     /* Measured Value 32bit */
     for (i = TX_MEASURED_VALUE_32_SIZE; i; i--) {
-        if ( (tmp_RTC_Counter - TX_Measured_Value_32[i-1].Timestamp) % 60 == 0 ) {
+        if ( (tmp_RTC_Counter - TX_Measured_Value_32[i-1].Timestamp) % REFRESH_TIME == 0 ) {
             uint_least8_t tmp[4];
             tmp[3] = (uint8_t)(TX_Measured_Value_32[i-1].Value);
             tmp[2] = (uint8_t)(TX_Measured_Value_32[i-1].Value>>8);

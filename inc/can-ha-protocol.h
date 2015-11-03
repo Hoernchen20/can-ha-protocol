@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file    can-ha-protocol.h
  * @author  Felix Horn
  * @version 0.1
@@ -39,8 +39,8 @@
 /* Exported variables --------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/
 #ifndef BOOL
-  #define BOOL
-  typedef enum { FALSE, TRUE }bool;
+    #define BOOL
+    typedef enum { FALSE, TRUE }bool;
 #endif
 
 /* Functionpointer */
@@ -56,10 +56,10 @@ typedef void (*SetPoint32_Function) (int32_t);
   * Test
   */
 typedef struct {
-  uint_least32_t  Identifier;
-  uint32_t        Timestamp;
-  uint_least8_t   State;
-  uint_least8_t   padding[3];
+    uint_least32_t  Identifier;
+    uint32_t        Timestamp;
+    uint_least8_t   State;
+    uint_least8_t   padding[3];
 }SingleIndication_TypeDef;
 
 /**
@@ -68,10 +68,10 @@ typedef struct {
   * Test
   */
 typedef struct {
-  uint_least32_t  Identifier;
-  uint32_t        Timestamp;
-  uint_least8_t   State;
-  uint_least8_t   padding[3];
+    uint_least32_t  Identifier;
+    uint32_t        Timestamp;
+    uint_least8_t   State;
+    uint_least8_t   padding[3];
 }DoubleIndication_TypeDef;
 
 /**
@@ -81,10 +81,10 @@ typedef struct {
   * e.g. 21,53°C = 2153
   */
 typedef struct {
-  uint_least32_t  Identifier;
-  uint32_t        Timestamp;
-  int_least16_t   Value;
-  uint_least8_t   padding[2];
+    uint_least32_t  Identifier;
+    uint32_t        Timestamp;
+    int_least16_t   Value;
+    uint_least8_t   padding[2];
 }MeasuredValue16_TypeDef;
 
 /**
@@ -93,9 +93,9 @@ typedef struct {
   * Floating Point Value
   */
 typedef struct {
-  uint_least32_t  Identifier;
-  uint32_t        Timestamp;
-  int_least32_t   Value;
+    uint_least32_t  Identifier;
+    uint32_t        Timestamp;
+    int_least32_t   Value;
 }MeasuredValue32_TypeDef;
 
 /**
@@ -104,10 +104,10 @@ typedef struct {
   * Test
   */
 typedef struct {
-  uint_least32_t          Identifier;
-  SingleCommand_Function  Function;
-  int_least8_t            State;
-  uint_least8_t           padding[3];
+    uint_least32_t          Identifier;
+    SingleCommand_Function  Function;
+    int_least8_t            State;
+    uint_least8_t           padding[3];
 }SingleCommand_TypeDef;
 
 /**
@@ -116,10 +116,10 @@ typedef struct {
   * Test
   */
 typedef struct {
-  uint_least32_t          Identifier;
-  DoubleCommand_Function  Function;
-  int_least8_t            State;
-  uint_least8_t           padding[3];
+    uint_least32_t          Identifier;
+    DoubleCommand_Function  Function;
+    int_least8_t            State;
+    uint_least8_t           padding[3];
 }DoubleCommand_TypeDef;
 
 /**
@@ -129,10 +129,10 @@ typedef struct {
   * e.g. 21,53°C = 2153
   */
 typedef struct {
-  uint_least32_t        Identifier;
-  SetPoint16_Function   Function;
-  int_least16_t         Value;
-  uint_least8_t         padding[2];
+    uint_least32_t        Identifier;
+    SetPoint16_Function   Function;
+    int_least16_t         Value;
+    uint_least8_t         padding[2];
 }SetPoint16_TypeDef;
 
 /**
@@ -141,9 +141,9 @@ typedef struct {
   * Floating point value
   */
 typedef struct {
-  uint_least32_t        Identifier;
-  SetPoint32_Function   Function;
-  int_least32_t         Value;
+    uint_least32_t        Identifier;
+    SetPoint32_Function   Function;
+    int_least32_t         Value;
 }SetPoint32_TypeDef;
 
 /* Exported macro ------------------------------------------------------------*/
