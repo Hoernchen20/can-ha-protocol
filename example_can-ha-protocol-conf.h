@@ -202,7 +202,7 @@
 #define TX_MEASURED_VALUE_32_19_ID   21019
 
 /* Identifier of received measured values */
-#define RX_MEASURED_VALUE_32_0_ID    Testboard_Temperatur
+#define RX_MEASURED_VALUE_32_0_ID    22000
 #define RX_MEASURED_VALUE_32_1_ID    22001
 #define RX_MEASURED_VALUE_32_2_ID    22002
 #define RX_MEASURED_VALUE_32_3_ID    22003

@@ -69,30 +69,383 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-SingleIndication_TypeDef TX_Single_Indication[TX_SINGLE_INDICATION_SIZE];
-SingleIndication_TypeDef RX_Single_Indication[RX_SINGLE_INDICATION_SIZE];
-MeasuredValue16_TypeDef  TX_Measured_Value_16[TX_MEASURED_VALUE_16_SIZE];
-MeasuredValue16_TypeDef  RX_Measured_Value_16[RX_MEASURED_VALUE_16_SIZE];
-MeasuredValue32_TypeDef  TX_Measured_Value_32[TX_MEASURED_VALUE_32_SIZE];
-MeasuredValue32_TypeDef  RX_Measured_Value_32[RX_MEASURED_VALUE_32_SIZE];
+SingleIndication_TypeDef TX_Single_Indication[TX_SINGLE_INDICATION_SIZE] = {
+#if TX_SINGLE_INDICATION_SIZE >= 1
+    {TX_SINGLE_INDICATION_0_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 2
+    ,{TX_SINGLE_INDICATION_1_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 3
+    ,{TX_SINGLE_INDICATION_2_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 4
+    ,{TX_SINGLE_INDICATION_3_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 5
+    ,{TX_SINGLE_INDICATION_4_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 6
+    ,{TX_SINGLE_INDICATION_5_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 7
+    ,{TX_SINGLE_INDICATION_6_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 8
+    ,{TX_SINGLE_INDICATION_7_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 9
+    ,{TX_SINGLE_INDICATION_8_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 10
+    ,{TX_SINGLE_INDICATION_9_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 11
+    ,{TX_SINGLE_INDICATION_10_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 12
+    ,{TX_SINGLE_INDICATION_11_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 13
+    ,{TX_SINGLE_INDICATION_12_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 14
+    ,{TX_SINGLE_INDICATION_13_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 15
+    ,{TX_SINGLE_INDICATION_14_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 16
+    ,{TX_SINGLE_INDICATION_15_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 17
+    ,{TX_SINGLE_INDICATION_16_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 18
+    ,{TX_SINGLE_INDICATION_17_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 19
+    ,{TX_SINGLE_INDICATION_18_ID, 0, 2, {0}}
+#endif
+#if TX_SINGLE_INDICATION_SIZE >= 20
+    ,{TX_SINGLE_INDICATION_19_ID, 0, 2, {0}}
+#endif
+};
+SingleIndication_TypeDef RX_Single_Indication[RX_SINGLE_INDICATION_SIZE] = {
+#if RX_SINGLE_INDICATION_SIZE >= 1
+    {RX_SINGLE_INDICATION_0_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 2
+    ,{RX_SINGLE_INDICATION_1_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 3
+    ,{RX_SINGLE_INDICATION_2_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 4
+    ,{RX_SINGLE_INDICATION_3_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 5
+    ,{RX_SINGLE_INDICATION_4_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 6
+    ,{RX_SINGLE_INDICATION_5_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 7
+    ,{RX_SINGLE_INDICATION_6_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 8
+    ,{RX_SINGLE_INDICATION_7_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 9
+    ,{RX_SINGLE_INDICATION_8_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 10
+    ,{RX_SINGLE_INDICATION_9_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 11
+    ,{RX_SINGLE_INDICATION_10_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 12
+    ,{RX_SINGLE_INDICATION_11_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 13
+    ,{RX_SINGLE_INDICATION_12_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 14
+    ,{RX_SINGLE_INDICATION_13_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 15
+    ,{RX_SINGLE_INDICATION_14_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 16
+    ,{RX_SINGLE_INDICATION_15_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 17
+    ,{RX_SINGLE_INDICATION_16_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 18
+    ,{RX_SINGLE_INDICATION_17_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 19
+    ,{RX_SINGLE_INDICATION_18_ID, 0, 2, {0}}
+#endif
+#if RX_SINGLE_INDICATION_SIZE >= 20
+    ,{RX_SINGLE_INDICATION_19_ID, 0, 2, {0}}
+#endif
+};
+DoubleIndication_TypeDef TX_Double_Indication[TX_DOUBLE_INDICATION_SIZE];
+DoubleIndication_TypeDef RX_Double_Indication[RX_DOUBLE_INDICATION_SIZE];
+MeasuredValue16_TypeDef  TX_Measured_Value_16[TX_MEASURED_VALUE_16_SIZE] = {
+#if TX_MEASURED_VALUE_16_SIZE >= 1
+    {TX_MEASURED_VALUE_16_0_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 2
+    ,{TX_MEASURED_VALUE_16_1_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 3
+    ,{TX_MEASURED_VALUE_16_2_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 4
+    ,{TX_MEASURED_VALUE_16_3_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 5
+    ,{TX_MEASURED_VALUE_16_4_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 6
+    ,{TX_MEASURED_VALUE_16_5_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 7
+    ,{TX_MEASURED_VALUE_16_6_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 8
+    ,{TX_MEASURED_VALUE_16_7_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 9
+    ,{TX_MEASURED_VALUE_16_8_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 10
+    ,{TX_MEASURED_VALUE_16_9_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 11
+    ,{TX_MEASURED_VALUE_16_10_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 12
+    ,{TX_MEASURED_VALUE_16_11_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 13
+    ,{TX_MEASURED_VALUE_16_12_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 14
+    ,{TX_MEASURED_VALUE_16_13_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 15
+    ,{TX_MEASURED_VALUE_16_14_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 16
+    ,{TX_MEASURED_VALUE_16_15_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 17
+    ,{TX_MEASURED_VALUE_16_16_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 18
+    ,{TX_MEASURED_VALUE_16_17_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 19
+    ,{TX_MEASURED_VALUE_16_18_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_16_SIZE >= 20
+    ,{TX_MEASURED_VALUE_16_19_ID, 0, (int16_t)0xFFFF, {0}}
+#endif
+};
+MeasuredValue16_TypeDef  RX_Measured_Value_16[RX_MEASURED_VALUE_16_SIZE] = {
+#if RX_MEASURED_VALUE_16_SIZE >= 1
+    {RX_MEASURED_VALUE_16_0_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 2
+    ,{RX_MEASURED_VALUE_16_1_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 3
+    ,{RX_MEASURED_VALUE_16_2_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 4
+    ,{RX_MEASURED_VALUE_16_3_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 5
+    ,{RX_MEASURED_VALUE_16_4_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 6
+    ,{RX_MEASURED_VALUE_16_5_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 7
+    ,{RX_MEASURED_VALUE_16_6_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 8
+    ,{RX_MEASURED_VALUE_16_7_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 9
+    ,{RX_MEASURED_VALUE_16_8_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 10
+    ,{RX_MEASURED_VALUE_16_9_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 11
+    ,{RX_MEASURED_VALUE_16_10_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 12
+    ,{RX_MEASURED_VALUE_16_11_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 13
+    ,{RX_MEASURED_VALUE_16_12_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 14
+    ,{RX_MEASURED_VALUE_16_13_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 15
+    ,{RX_MEASURED_VALUE_16_14_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 16
+    ,{RX_MEASURED_VALUE_16_15_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 17
+    ,{RX_MEASURED_VALUE_16_16_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 18
+    ,{RX_MEASURED_VALUE_16_17_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 19
+    ,{RX_MEASURED_VALUE_16_18_ID, 0, 0, {0}}
+#endif
+#if RX_MEASURED_VALUE_16_SIZE >= 20
+    ,{RX_MEASURED_VALUE_16_19_ID, 0, 0, {0}}
+#endif
+};
+MeasuredValue32_TypeDef  TX_Measured_Value_32[TX_MEASURED_VALUE_32_SIZE] = {
+#if TX_MEASURED_VALUE_32_SIZE >= 1
+    {TX_MEASURED_VALUE_32_0_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 2
+    ,{TX_MEASURED_VALUE_32_1_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 3
+    ,{TX_MEASURED_VALUE_32_2_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 4
+    ,{TX_MEASURED_VALUE_32_3_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 5
+    ,{TX_MEASURED_VALUE_32_4_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 6
+    ,{TX_MEASURED_VALUE_32_5_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 7
+    ,{TX_MEASURED_VALUE_32_6_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 8
+    ,{TX_MEASURED_VALUE_32_7_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 9
+    ,{TX_MEASURED_VALUE_32_8_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 10
+    ,{TX_MEASURED_VALUE_32_9_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 11
+    ,{TX_MEASURED_VALUE_32_10_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 12
+    ,{TX_MEASURED_VALUE_32_11_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 13
+    ,{TX_MEASURED_VALUE_32_12_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 14
+    ,{TX_MEASURED_VALUE_32_13_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 15
+    ,{TX_MEASURED_VALUE_32_14_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 16
+    ,{TX_MEASURED_VALUE_32_15_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 17
+    ,{TX_MEASURED_VALUE_32_16_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 18
+    ,{TX_MEASURED_VALUE_32_17_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 19
+    ,{TX_MEASURED_VALUE_32_18_ID, 0, 0xFFFF, {0}}
+#endif
+#if TX_MEASURED_VALUE_32_SIZE >= 20
+    ,{TX_MEASURED_VALUE_32_19_ID, 0, 0xFFFF, {0}}
+#endif
+};
+MeasuredValue32_TypeDef  RX_Measured_Value_32[RX_MEASURED_VALUE_32_SIZE] = {
+#if RX_MEASURED_VALUE_32_SIZE >= 1
+    {RX_MEASURED_VALUE_32_0_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 2
+    ,{RX_MEASURED_VALUE_32_1_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 3
+    ,{RX_MEASURED_VALUE_32_2_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 4
+    ,{RX_MEASURED_VALUE_32_3_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 5
+    ,{RX_MEASURED_VALUE_32_4_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 6
+    ,{RX_MEASURED_VALUE_32_5_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 7
+    ,{RX_MEASURED_VALUE_32_6_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 8
+    ,{RX_MEASURED_VALUE_32_7_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 9
+    ,{RX_MEASURED_VALUE_32_8_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 10
+    ,{RX_MEASURED_VALUE_32_9_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 11
+    ,{RX_MEASURED_VALUE_32_10_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 12
+    ,{RX_MEASURED_VALUE_32_11_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 13
+    ,{RX_MEASURED_VALUE_32_12_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 14
+    ,{RX_MEASURED_VALUE_32_13_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 15
+    ,{RX_MEASURED_VALUE_32_14_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 16
+    ,{RX_MEASURED_VALUE_32_15_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 17
+    ,{RX_MEASURED_VALUE_32_16_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 18
+    ,{RX_MEASURED_VALUE_32_17_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 19
+    ,{RX_MEASURED_VALUE_32_18_ID, 0, 0xFFFF, {0}}
+#endif
+#if RX_MEASURED_VALUE_32_SIZE >= 20
+    ,{RX_MEASURED_VALUE_32_19_ID, 0, 0xFFFF, {0}}
+#endif
+};
 
 /* Private function prototypes -----------------------------------------------*/
-static void Single_Indication_Init(void);
-static void Measured_Value_16_Init(void);
-static void Measured_Value_32_Init(void);
-
 /* Private functions ---------------------------------------------------------*/
-/**
-  * @brief  This function configure the different object types.
-  * @param  None
-  * @retval None
-  */
-void Config_CAN_HA_Protocol(void) {
-    Single_Indication_Init();
-    Measured_Value_16_Init();
-    Measured_Value_32_Init();
-}
-
 /**
   * @brief  Periodic send of Data. Should be start every second.
   * @param  None
@@ -113,7 +466,7 @@ void CAN_HA_Refresh(void) {
     /* Double Indication */
     for (i = TX_DOUBLE_INDICATION_SIZE; i; i--) {
         if ( (tmp_RTC_Counter - TX_Double_Indication[i-1].Timestamp) % REFRESH_TIME == 0) {
-            CAN_TxMsgHandle(TYPE_Double_INDICATION, CAN_RTR_DATA, LENGTH_DOUBLE_INDICATION,
+            CAN_TxMsgHandle(TYPE_DOUBLE_INDICATION, CAN_RTR_DATA, LENGTH_DOUBLE_INDICATION,
                 TX_Double_Indication[i-1].Identifier, &TX_Double_Indication[i-1].State);
         }
     }
@@ -148,77 +501,9 @@ void CAN_HA_Refresh(void) {
     if (Heartbeat_Cnt > HEARTBEAT_TIME) {
         Heartbeat_Cnt = 0;
         uint_least8_t Status = TRUE;
-        CAN_TxMsgHandle(HEARTBEAT, CAN_RTR_DATA, 1, NODE_ID, &Status);
+        CAN_TxMsgHandle(TYPE_HEARTBEAT, CAN_RTR_DATA, 1, NODE_ID, &Status);
     }
 }
-
-/**
-  * @brief  This function configure the identifier of the single indications.
-  * @param  None
-  * @retval None
-  */
-static void Single_Indication_Init(void) {
-#if TX_SINGLE_INDICATION_SIZE >= 1
-    TX_Single_Indication[0].Identifier = TX_SINGLE_INDICATION_0_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 2
-    TX_Single_Indication[1].Identifier = TX_SINGLE_INDICATION_1_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 3
-    TX_Single_Indication[2].Identifier = TX_SINGLE_INDICATION_2_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 4
-    TX_Single_Indication[3].Identifier = TX_SINGLE_INDICATION_3_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 5
-    TX_Single_Indication[4].Identifier = TX_SINGLE_INDICATION_4_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 6
-    TX_Single_Indication[5].Identifier = TX_SINGLE_INDICATION_5_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 7
-    TX_Single_Indication[6].Identifier = TX_SINGLE_INDICATION_6_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 8
-    TX_Single_Indication[7].Identifier = TX_SINGLE_INDICATION_7_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 9
-    TX_Single_Indication[8].Identifier = TX_SINGLE_INDICATION_8_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 10
-    TX_Single_Indication[9].Identifier = TX_SINGLE_INDICATION_9_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 11
-    TX_Single_Indication[10].Identifier = TX_SINGLE_INDICATION_10_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 12
-    TX_Single_Indication[11].Identifier = TX_SINGLE_INDICATION_11_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 13
-    TX_Single_Indication[12].Identifier = TX_SINGLE_INDICATION_12_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 14
-    TX_Single_Indication[13].Identifier = TX_SINGLE_INDICATION_13_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 15
-    TX_Single_Indication[14].Identifier = TX_SINGLE_INDICATION_14_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 16
-    TX_Single_Indication[15].Identifier = TX_SINGLE_INDICATION_15_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 17
-    TX_Single_Indication[16].Identifier = TX_SINGLE_INDICATION_16_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 18
-    TX_Single_Indication[17].Identifier = TX_SINGLE_INDICATION_17_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 19
-    TX_Single_Indication[18].Identifier = TX_SINGLE_INDICATION_18_ID;
-#endif
-#if TX_SINGLE_INDICATION_SIZE >= 20
-    TX_Single_Indication[19].Identifier = TX_SINGLE_INDICATION_19_ID;
-#endif
-  }
 
 /**
   * @brief  This function change state of the single indications and send them.
@@ -232,137 +517,6 @@ void Single_Indication_Write(uint_least32_t ObjectNumber, bool NewState) {
         CAN_TxMsgHandle(TYPE_SINGLE_INDICATION, CAN_RTR_DATA, LENGTH_SINGLE_INDICATION,
             TX_Single_Indication[ObjectNumber].Identifier, &TX_Single_Indication[ObjectNumber].State);
     }
-}
-
-/**
-  * @brief  This function configure the identifier of the 16bit measured values.
-  * @param  None
-  * @retval None
-  */
-static void Measured_Value_16_Init(void) {
-  /* Send */
-#if TX_MEASURED_VALUE_16_SIZE >= 1
-    TX_Measured_Value_16[0].Identifier = TX_MEASURED_VALUE_16_0_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 2
-    TX_Measured_Value_16[1].Identifier = TX_MEASURED_VALUE_16_1_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 3
-    TX_Measured_Value_16[2].Identifier = TX_MEASURED_VALUE_16_2_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 4
-    TX_Measured_Value_16[3].Identifier = TX_MEASURED_VALUE_16_3_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 5
-    TX_Measured_Value_16[4].Identifier = TX_MEASURED_VALUE_16_4_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 6
-    TX_Measured_Value_16[5].Identifier = TX_MEASURED_VALUE_16_5_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 7
-    TX_Measured_Value_16[6].Identifier = TX_MEASURED_VALUE_16_6_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 8
-    TX_Measured_Value_16[7].Identifier = TX_MEASURED_VALUE_16_7_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 9
-    TX_Measured_Value_16[8].Identifier = TX_MEASURED_VALUE_16_8_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 10
-    TX_Measured_Value_16[9].Identifier = TX_MEASURED_VALUE_16_9_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 11
-    TX_Measured_Value_16[10].Identifier = TX_MEASURED_VALUE_16_10_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 12
-    TX_Measured_Value_16[11].Identifier = TX_MEASURED_VALUE_16_11_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 13
-    TX_Measured_Value_16[12].Identifier = TX_MEASURED_VALUE_16_12_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 14
-    TX_Measured_Value_16[13].Identifier = TX_MEASURED_VALUE_16_13_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 15
-    TX_Measured_Value_16[14].Identifier = TX_MEASURED_VALUE_16_14_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 16
-    TX_Measured_Value_16[15].Identifier = TX_MEASURED_VALUE_16_15_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 17
-    TX_Measured_Value_16[16].Identifier = TX_MEASURED_VALUE_16_16_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 18
-    TX_Measured_Value_16[17].Identifier = TX_MEASURED_VALUE_16_17_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 19
-    TX_Measured_Value_16[18].Identifier = TX_MEASURED_VALUE_16_18_ID;
-#endif
-#if TX_MEASURED_VALUE_16_SIZE >= 20
-    TX_Measured_Value_16[19].Identifier = TX_MEASURED_VALUE_16_19_ID;
-#endif
-
-  /* Receive */
-#if RX_MEASURED_VALUE_16_SIZE >= 1
-    RX_Measured_Value_16[0].Identifier = RX_MEASURED_VALUE_16_0_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 2
-    RX_Measured_Value_16[1].Identifier = RX_MEASURED_VALUE_16_1_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 3
-    RX_Measured_Value_16[2].Identifier = RX_MEASURED_VALUE_16_2_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 4
-    RX_Measured_Value_16[3].Identifier = RX_MEASURED_VALUE_16_3_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 5
-    RX_Measured_Value_16[4].Identifier = RX_MEASURED_VALUE_16_4_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 6
-    RX_Measured_Value_16[5].Identifier = RX_MEASURED_VALUE_16_5_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 7
-    RX_Measured_Value_16[6].Identifier = RX_MEASURED_VALUE_16_6_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 8
-    RX_Measured_Value_16[7].Identifier = RX_MEASURED_VALUE_16_7_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 9
-    RX_Measured_Value_16[8].Identifier = RX_MEASURED_VALUE_16_8_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 10
-    RX_Measured_Value_16[9].Identifier = RX_MEASURED_VALUE_16_9_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 11
-    RX_Measured_Value_16[10].Identifier = RX_MEASURED_VALUE_16_10_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 12
-    RX_Measured_Value_16[11].Identifier = RX_MEASURED_VALUE_16_11_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 13
-    RX_Measured_Value_16[12].Identifier = RX_MEASURED_VALUE_16_12_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 14
-    RX_Measured_Value_16[13].Identifier = RX_MEASURED_VALUE_16_13_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 15
-    RX_Measured_Value_16[14].Identifier = RX_MEASURED_VALUE_16_14_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 16
-    RX_Measured_Value_16[15].Identifier = RX_MEASURED_VALUE_16_15_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 17
-    RX_Measured_Value_16[16].Identifier = RX_MEASURED_VALUE_16_16_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 18
-    RX_Measured_Value_16[17].Identifier = RX_MEASURED_VALUE_16_17_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 19
-    RX_Measured_Value_16[18].Identifier = RX_MEASURED_VALUE_16_18_ID;
-#endif
-#if RX_MEASURED_VALUE_16_SIZE >= 20
-    RX_Measured_Value_16[19].Identifier = RX_MEASURED_VALUE_16_19_ID;
-#endif
 }
 
 /**
@@ -381,137 +535,6 @@ void Measured_Value_16_Write(uint_least32_t ObjectNumber, int16_t NewValue) {
         CAN_TxMsgHandle(TYPE_MEASURED_VALUE_16, CAN_RTR_DATA, LENGTH_MEASURED_VALUE_16,
             TX_Measured_Value_16[ObjectNumber].Identifier, tmp);
     }
-}
-
-/**
-  * @brief  This function configure the identifier of the 32bit measured values.
-  * @param  None
-  * @retval None
-  */
-static void Measured_Value_32_Init(void) {
-    /* Send */
-#if TX_MEASURED_VALUE_32_SIZE >= 1
-    TX_Measured_Value_32[0].Identifier = TX_MEASURED_VALUE_32_0_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 2
-    TX_Measured_Value_32[1].Identifier = TX_MEASURED_VALUE_32_1_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 3
-    TX_Measured_Value_32[2].Identifier = TX_MEASURED_VALUE_32_2_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 4
-    TX_Measured_Value_32[3].Identifier = TX_MEASURED_VALUE_32_3_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 5
-    TX_Measured_Value_32[4].Identifier = TX_MEASURED_VALUE_32_4_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 6
-    TX_Measured_Value_32[5].Identifier = TX_MEASURED_VALUE_32_5_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 7
-    TX_Measured_Value_32[6].Identifier = TX_MEASURED_VALUE_32_6_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 8
-    TX_Measured_Value_32[7].Identifier = TX_MEASURED_VALUE_32_7_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 9
-    TX_Measured_Value_32[8].Identifier = TX_MEASURED_VALUE_32_8_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 10
-    TX_Measured_Value_32[9].Identifier = TX_MEASURED_VALUE_32_9_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 11
-    TX_Measured_Value_32[10].Identifier = TX_MEASURED_VALUE_32_10_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 12
-    TX_Measured_Value_32[11].Identifier = TX_MEASURED_VALUE_32_11_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 13
-    TX_Measured_Value_32[12].Identifier = TX_MEASURED_VALUE_32_12_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 14
-    TX_Measured_Value_32[13].Identifier = TX_MEASURED_VALUE_32_13_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 15
-    TX_Measured_Value_32[14].Identifier = TX_MEASURED_VALUE_32_14_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 32
-    TX_Measured_Value_32[15].Identifier = TX_MEASURED_VALUE_32_15_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 17
-    TX_Measured_Value_32[32].Identifier = TX_MEASURED_VALUE_32_32_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 18
-    TX_Measured_Value_32[17].Identifier = TX_MEASURED_VALUE_32_17_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 19
-    TX_Measured_Value_32[18].Identifier = TX_MEASURED_VALUE_32_18_ID;
-#endif
-#if TX_MEASURED_VALUE_32_SIZE >= 20
-    TX_Measured_Value_32[19].Identifier = TX_MEASURED_VALUE_32_19_ID;
-#endif
-
-  /* Receive */
-#if RX_MEASURED_VALUE_32_SIZE >= 1
-    RX_Measured_Value_32[0].Identifier = RX_MEASURED_VALUE_32_0_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 2
-    RX_Measured_Value_32[1].Identifier = RX_MEASURED_VALUE_32_1_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 3
-    RX_Measured_Value_32[2].Identifier = RX_MEASURED_VALUE_32_2_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 4
-    RX_Measured_Value_32[3].Identifier = RX_MEASURED_VALUE_32_3_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 5
-    RX_Measured_Value_32[4].Identifier = RX_MEASURED_VALUE_32_4_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 6
-    RX_Measured_Value_32[5].Identifier = RX_MEASURED_VALUE_32_5_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 7
-    RX_Measured_Value_32[6].Identifier = RX_MEASURED_VALUE_32_6_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 8
-    RX_Measured_Value_32[7].Identifier = RX_MEASURED_VALUE_32_7_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 9
-    RX_Measured_Value_32[8].Identifier = RX_MEASURED_VALUE_32_8_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 10
-    RX_Measured_Value_32[9].Identifier = RX_MEASURED_VALUE_32_9_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 11
-    RX_Measured_Value_32[10].Identifier = RX_MEASURED_VALUE_32_10_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 12
-    RX_Measured_Value_32[11].Identifier = RX_MEASURED_VALUE_32_11_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 13
-    RX_Measured_Value_32[12].Identifier = RX_MEASURED_VALUE_32_12_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 14
-    RX_Measured_Value_32[13].Identifier = RX_MEASURED_VALUE_32_13_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 15
-    RX_Measured_Value_32[14].Identifier = RX_MEASURED_VALUE_32_14_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 32
-    RX_Measured_Value_32[15].Identifier = RX_MEASURED_VALUE_32_15_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 17
-    RX_Measured_Value_32[32].Identifier = RX_MEASURED_VALUE_32_32_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 18
-    RX_Measured_Value_32[17].Identifier = RX_MEASURED_VALUE_32_17_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 19
-    RX_Measured_Value_32[18].Identifier = RX_MEASURED_VALUE_32_18_ID;
-#endif
-#if RX_MEASURED_VALUE_32_SIZE >= 20
-    RX_Measured_Value_32[19].Identifier = RX_MEASURED_VALUE_32_19_ID;
-#endif
 }
 
 /**
