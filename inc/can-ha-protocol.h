@@ -32,11 +32,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
 #include "can-ha-protocol-conf.h"
-#include "can_communication.h"
-#include "rtc.h"
 
 /* Exported constants --------------------------------------------------------*/
 /* Exported variables --------------------------------------------------------*/
+extern volatile uint32_t UnixTimestamp;
+
 /* Exported types ------------------------------------------------------------*/
 #ifndef BOOL
     #define BOOL

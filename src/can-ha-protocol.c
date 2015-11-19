@@ -453,7 +453,7 @@ MeasuredValue32_TypeDef  RX_Measured_Value_32[RX_MEASURED_VALUE_32_SIZE] = {
   */
 void CAN_HA_Refresh(void) {
     uint_fast8_t i;
-    uint32_t tmp_RTC_Counter = RTC_GetUnixTime();
+    uint32_t tmp_RTC_Counter = UnixTimestamp;
 
     /* Single Indication */
     for (i = TX_SINGLE_INDICATION_SIZE; i; i--) {
@@ -513,7 +513,7 @@ void CAN_HA_Refresh(void) {
 void Single_Indication_Write(uint_least32_t ObjectNumber, bool NewState) {
     if (TX_Single_Indication[ObjectNumber].State != NewState) {
         TX_Single_Indication[ObjectNumber].State = NewState;
-        TX_Single_Indication[ObjectNumber].Timestamp = RTC_GetUnixTime();
+        TX_Single_Indication[ObjectNumber].Timestamp = UnixTimestamp;
         CAN_TxMsgHandle(TYPE_SINGLE_INDICATION, CAN_RTR_DATA, LENGTH_SINGLE_INDICATION,
             TX_Single_Indication[ObjectNumber].Identifier, &TX_Single_Indication[ObjectNumber].State);
     }
@@ -527,7 +527,7 @@ void Single_Indication_Write(uint_least32_t ObjectNumber, bool NewState) {
 void Measured_Value_16_Write(uint_least32_t ObjectNumber, int16_t NewValue) {
     if (TX_Measured_Value_16[ObjectNumber].Value != NewValue) {
         TX_Measured_Value_16[ObjectNumber].Value = NewValue;
-        TX_Measured_Value_16[ObjectNumber].Timestamp = RTC_GetUnixTime();
+        TX_Measured_Value_16[ObjectNumber].Timestamp = UnixTimestamp;
 
         uint_least8_t tmp[2];
         tmp[1] = (uint8_t)(TX_Measured_Value_16[ObjectNumber].Value);
@@ -545,7 +545,7 @@ void Measured_Value_16_Write(uint_least32_t ObjectNumber, int16_t NewValue) {
 void Measured_Value_32_Write(uint_least32_t ObjectNumber, int32_t NewValue) {
     if (TX_Measured_Value_32[ObjectNumber].Value != NewValue) {
         TX_Measured_Value_32[ObjectNumber].Value = NewValue;
-        TX_Measured_Value_32[ObjectNumber].Timestamp = RTC_GetUnixTime();
+        TX_Measured_Value_32[ObjectNumber].Timestamp = UnixTimestamp;
 
         uint_least8_t tmp[4];
         tmp[3] = (uint8_t)(TX_Measured_Value_32[ObjectNumber].Value);
