@@ -23,7 +23,7 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "../inc/can-ha-protocol.h"
+#include "can-ha-protocol.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -444,6 +444,16 @@ MeasuredValue32_TypeDef  RX_Measured_Value_32[RX_MEASURED_VALUE_32_SIZE] = {
 #endif
 };
 
+CanHA_MsgTypeDef CAN_RxMsgBuf[CAN_BUFFER_SIZE];
+volatile uint_fast8_t CAN_RxMsg_WrIndex = 0;
+volatile uint_fast8_t CAN_RxMsg_RdIndex = 0;
+
+CanHA_MsgTypeDef CAN_TxMsgBuf[CAN_BUFFER_SIZE];
+volatile uint_fast8_t CAN_TxMsg_WrIndex = 0;
+volatile uint_fast8_t CAN_TxMsg_RdIndex = 0;
+
+volatile uint32_t UnixTimestamp = 1000000;
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 /**
@@ -457,51 +467,47 @@ void CAN_HA_Refresh(void) {
 
     /* Single Indication */
     for (i = TX_SINGLE_INDICATION_SIZE; i; i--) {
-        if ( (tmp_RTC_Counter - TX_Single_Indication[i-1].Timestamp) % REFRESH_TIME == 0) {
-            CAN_TxMsgHandle(TYPE_SINGLE_INDICATION, CAN_RTR_DATA, LENGTH_SINGLE_INDICATION,
-                TX_Single_Indication[i-1].Identifier, &TX_Single_Indication[i-1].State);
+        if ( (tmp_RTC_Counter - TX_Single_Indication[i-1].Timestamp) % (REFRESH_TIME + 1) == 0) {
+            CAN_HA_WriteBuffer(TYPE_SINGLE_INDICATION, TX_Single_Indication[i-1].Identifier, LENGTH_SINGLE_INDICATION, &TX_Single_Indication[i-1].State);
         }
     }
 
     /* Double Indication */
     for (i = TX_DOUBLE_INDICATION_SIZE; i; i--) {
-        if ( (tmp_RTC_Counter - TX_Double_Indication[i-1].Timestamp) % REFRESH_TIME == 0) {
-            CAN_TxMsgHandle(TYPE_DOUBLE_INDICATION, CAN_RTR_DATA, LENGTH_DOUBLE_INDICATION,
-                TX_Double_Indication[i-1].Identifier, &TX_Double_Indication[i-1].State);
+        if ( (tmp_RTC_Counter - TX_Double_Indication[i-1].Timestamp) % (REFRESH_TIME + 1) == 0) {
+            CAN_HA_WriteBuffer(TYPE_DOUBLE_INDICATION, TX_Double_Indication[i-1].Identifier, LENGTH_DOUBLE_INDICATION, &TX_Double_Indication[i-1].State);
         }
     }
 
     /* Measured Value 16bit */
     for (i = TX_MEASURED_VALUE_16_SIZE; i; i--) {
-        if ( (tmp_RTC_Counter - TX_Measured_Value_16[i-1].Timestamp) % REFRESH_TIME == 0 ) {
+        if ( (tmp_RTC_Counter - TX_Measured_Value_16[i-1].Timestamp) % (REFRESH_TIME + 1) == 0 ) {
             uint_least8_t tmp[2];
             tmp[1] = (uint8_t)(TX_Measured_Value_16[i-1].Value);
             tmp[0] = (uint8_t)(TX_Measured_Value_16[i-1].Value>>8);
-            CAN_TxMsgHandle(TYPE_MEASURED_VALUE_16, CAN_RTR_DATA, LENGTH_MEASURED_VALUE_16,
-                TX_Measured_Value_16[i-1].Identifier, tmp);
+            CAN_HA_WriteBuffer(TYPE_MEASURED_VALUE_16, TX_Measured_Value_16[i-1].Identifier, LENGTH_MEASURED_VALUE_16, tmp);
         }
     }
 
     /* Measured Value 32bit */
     for (i = TX_MEASURED_VALUE_32_SIZE; i; i--) {
-        if ( (tmp_RTC_Counter - TX_Measured_Value_32[i-1].Timestamp) % REFRESH_TIME == 0 ) {
+        if ( (tmp_RTC_Counter - TX_Measured_Value_32[i-1].Timestamp) % (REFRESH_TIME + 1) == 0 ) {
             uint_least8_t tmp[4];
             tmp[3] = (uint8_t)(TX_Measured_Value_32[i-1].Value);
             tmp[2] = (uint8_t)(TX_Measured_Value_32[i-1].Value>>8);
             tmp[1] = (uint8_t)(TX_Measured_Value_32[i-1].Value>>16);
             tmp[0] = (uint8_t)(TX_Measured_Value_32[i-1].Value>>24);
-            CAN_TxMsgHandle(TYPE_MEASURED_VALUE_32, CAN_RTR_DATA, LENGTH_MEASURED_VALUE_32,
-                TX_Measured_Value_32[i-1].Identifier, tmp);
+            CAN_HA_WriteBuffer(TYPE_MEASURED_VALUE_32, TX_Measured_Value_32[i-1].Identifier, LENGTH_MEASURED_VALUE_32, tmp);
         }
     }
 
     /* Heartbeat */
     static uint_fast8_t Heartbeat_Cnt = 0;
     Heartbeat_Cnt++;
-    if (Heartbeat_Cnt > HEARTBEAT_TIME) {
+    if (Heartbeat_Cnt > HEARTBEAT_TIME - 1) {
         Heartbeat_Cnt = 0;
         uint_least8_t Status = TRUE;
-        CAN_TxMsgHandle(TYPE_HEARTBEAT, CAN_RTR_DATA, 1, NODE_ID, &Status);
+        CAN_HA_WriteBuffer(TYPE_HEARTBEAT, NODE_ID, LENGTH_HEARTBEAT, &Status);
     }
 }
 
@@ -513,9 +519,8 @@ void CAN_HA_Refresh(void) {
 void Single_Indication_Write(uint_least32_t ObjectNumber, bool NewState) {
     if (TX_Single_Indication[ObjectNumber].State != NewState) {
         TX_Single_Indication[ObjectNumber].State = NewState;
-        TX_Single_Indication[ObjectNumber].Timestamp = UnixTimestamp;
-        CAN_TxMsgHandle(TYPE_SINGLE_INDICATION, CAN_RTR_DATA, LENGTH_SINGLE_INDICATION,
-            TX_Single_Indication[ObjectNumber].Identifier, &TX_Single_Indication[ObjectNumber].State);
+        TX_Single_Indication[ObjectNumber].Timestamp = UnixTimestamp - 1;
+        CAN_HA_WriteBuffer(TYPE_SINGLE_INDICATION, TX_Single_Indication[ObjectNumber].Identifier, LENGTH_SINGLE_INDICATION, &TX_Single_Indication[ObjectNumber].State);
     }
 }
 
@@ -527,13 +532,12 @@ void Single_Indication_Write(uint_least32_t ObjectNumber, bool NewState) {
 void Measured_Value_16_Write(uint_least32_t ObjectNumber, int16_t NewValue) {
     if (TX_Measured_Value_16[ObjectNumber].Value != NewValue) {
         TX_Measured_Value_16[ObjectNumber].Value = NewValue;
-        TX_Measured_Value_16[ObjectNumber].Timestamp = UnixTimestamp;
+        TX_Measured_Value_16[ObjectNumber].Timestamp = UnixTimestamp - 1;
 
         uint_least8_t tmp[2];
         tmp[1] = (uint8_t)(TX_Measured_Value_16[ObjectNumber].Value);
         tmp[0] = (uint8_t)(TX_Measured_Value_16[ObjectNumber].Value>>8);
-        CAN_TxMsgHandle(TYPE_MEASURED_VALUE_16, CAN_RTR_DATA, LENGTH_MEASURED_VALUE_16,
-            TX_Measured_Value_16[ObjectNumber].Identifier, tmp);
+        CAN_HA_WriteBuffer(TYPE_MEASURED_VALUE_16, TX_Measured_Value_16[ObjectNumber].Identifier, LENGTH_MEASURED_VALUE_16, tmp);
     }
 }
 
@@ -545,14 +549,86 @@ void Measured_Value_16_Write(uint_least32_t ObjectNumber, int16_t NewValue) {
 void Measured_Value_32_Write(uint_least32_t ObjectNumber, int32_t NewValue) {
     if (TX_Measured_Value_32[ObjectNumber].Value != NewValue) {
         TX_Measured_Value_32[ObjectNumber].Value = NewValue;
-        TX_Measured_Value_32[ObjectNumber].Timestamp = UnixTimestamp;
+        TX_Measured_Value_32[ObjectNumber].Timestamp = UnixTimestamp - 1;
 
         uint_least8_t tmp[4];
         tmp[3] = (uint8_t)(TX_Measured_Value_32[ObjectNumber].Value);
         tmp[2] = (uint8_t)(TX_Measured_Value_32[ObjectNumber].Value>>8);
         tmp[1] = (uint8_t)(TX_Measured_Value_32[ObjectNumber].Value>>16);
         tmp[0] = (uint8_t)(TX_Measured_Value_32[ObjectNumber].Value>>24);
-        CAN_TxMsgHandle(TYPE_MEASURED_VALUE_32, CAN_RTR_DATA, LENGTH_MEASURED_VALUE_32,
-            TX_Measured_Value_32[ObjectNumber].Identifier, tmp);
+        CAN_HA_WriteBuffer(TYPE_MEASURED_VALUE_32, TX_Measured_Value_32[ObjectNumber].Identifier, LENGTH_MEASURED_VALUE_32, tmp);
     }
+}
+
+/**
+  * @brief  
+  * @param  GetMessage: Pointer of messsage
+  * @retval None
+  */
+void CAN_HA_GetMessage(CanHA_MsgTypeDef *GetMessage) {
+    /* Copy received message into buffer */
+    memcpy(&CAN_RxMsgBuf[CAN_RxMsg_WrIndex], GetMessage, sizeof(CanHA_MsgTypeDef));
+    
+    /* Move buffer index to next entry */
+    CAN_RxMsg_WrIndex++;
+
+    if (CAN_RxMsg_WrIndex >= CAN_BUFFER_SIZE) {
+        CAN_RxMsg_WrIndex = 0;
+    }
+}
+
+bool CANHA_GetMsgFromBuf(CanHA_MsgTypeDef *GetMessage) {
+    if (CAN_TxMsg_WrIndex != CAN_TxMsg_RdIndex) {
+        GetMessage->MessageType = CAN_TxMsgBuf[CAN_TxMsg_RdIndex].MessageType;
+        GetMessage->Identifier = CAN_TxMsgBuf[CAN_TxMsg_RdIndex].Identifier;
+        GetMessage->DataLength = CAN_TxMsgBuf[CAN_TxMsg_RdIndex].DataLength;
+        
+        for (uint_fast8_t i = 0; i < CAN_TxMsgBuf[CAN_TxMsg_RdIndex].DataLength; i++) {
+            GetMessage->Data[i] = CAN_TxMsgBuf[CAN_TxMsg_RdIndex].Data[i];
+        }
+
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+void CANHA_MsgSent(void) {
+    CAN_TxMsg_RdIndex++;
+    if (CAN_TxMsg_RdIndex >= CAN_BUFFER_SIZE) {
+        CAN_TxMsg_RdIndex = 0;
+    }
+}
+
+/**
+  * @brief  Put new message in buffer
+  * @param  
+  * @retval None
+  */
+void CAN_HA_WriteBuffer(uint_least16_t MessageType, uint_least32_t Identifier, uint_least8_t DataLength, uint_least8_t *Data) {
+    CAN_TxMsgBuf[CAN_TxMsg_WrIndex].MessageType = MessageType;
+    CAN_TxMsgBuf[CAN_TxMsg_WrIndex].Identifier = Identifier;
+    CAN_TxMsgBuf[CAN_TxMsg_WrIndex].DataLength = DataLength;
+    
+    for (uint_fast8_t i = 0; i < DataLength; i++) {
+        CAN_TxMsgBuf[CAN_TxMsg_WrIndex].Data[i] = *Data;
+        Data++;
+    }
+
+    CAN_TxMsg_WrIndex++;
+    if (CAN_TxMsg_WrIndex >= CAN_BUFFER_SIZE) {
+        CAN_TxMsg_WrIndex = 0;
+    }
+}
+
+/**
+  * @brief  
+  * @param  
+  * @retval None
+  */
+bool CAN_HA_TestBuffer(void) {
+    if (CAN_TxMsg_WrIndex != CAN_TxMsg_RdIndex) {
+        return TRUE;
+    }
+    return FALSE;
 }

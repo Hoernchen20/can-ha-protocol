@@ -31,9 +31,12 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
+#include <string.h>
 #include "can-ha-protocol-conf.h"
 
 /* Exported constants --------------------------------------------------------*/
+#define CAN_BUFFER_SIZE           10
+
 /* Exported variables --------------------------------------------------------*/
 extern volatile uint32_t UnixTimestamp;
 
@@ -146,11 +149,33 @@ typedef struct {
     int_least32_t           Value;
 }SetPoint32_TypeDef;
 
+/**
+  * @brief  CAN home automation message struct
+  *
+  * Test
+  */
+typedef struct {
+  uint_least16_t            MessageType;
+  uint_least32_t            Identifier;
+  uint_least8_t             DataLength;
+  uint_least8_t             Data[8];
+}CanHA_MsgTypeDef;
+
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 void CAN_HA_Refresh(void);
 void Single_Indication_Write(uint_least32_t ObjectNumber, bool NewState);
 void Measured_Value_16_Write(uint_least32_t ObjectNumber, int16_t NewValue);
 void Measured_Value_32_Write(uint_least32_t ObjectNumber, int32_t NewValue);
+void CAN_HA_GetMessage(CanHA_MsgTypeDef *GetMessage); /* Insert in Can rx interrupt */
+void CAN_HA_ReadBuffer();
+void CAN_HA_WriteBuffer(uint_least16_t MessageType, uint_least32_t Identifier, uint_least8_t DataLength, uint_least8_t *Data);
+bool CAN_HA_TestBuffer(void);
+
+bool CANHA_GetMsgFromBuf(CanHA_MsgTypeDef *GetMessage);
+void CANHA_MsgSent(void);
+
+void CAN_TxMsgHandle(uint_least16_t Typ, uint_least8_t Rtr, uint_least8_t Length, uint_least32_t Id, uint_least8_t *Data);
+void CAN_RxMsgHandle(void);
 
 #endif /* CAN_HA_PROTOCOL_H_ */
