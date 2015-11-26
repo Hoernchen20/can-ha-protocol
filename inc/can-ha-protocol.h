@@ -163,19 +163,18 @@ typedef struct {
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
-void CAN_HA_Refresh(void);
-void Single_Indication_Write(uint_least32_t ObjectNumber, bool NewState);
-void Measured_Value_16_Write(uint_least32_t ObjectNumber, int16_t NewValue);
-void Measured_Value_32_Write(uint_least32_t ObjectNumber, int32_t NewValue);
-void CAN_HA_GetMessage(CanHA_MsgTypeDef *GetMessage); /* Insert in Can rx interrupt */
-void CAN_HA_ReadBuffer();
-void CAN_HA_WriteBuffer(uint_least16_t MessageType, uint_least32_t Identifier, uint_least8_t DataLength, uint_least8_t *Data);
-bool CAN_HA_TestBuffer(void);
-
-bool CANHA_GetMsgFromBuf(CanHA_MsgTypeDef *GetMessage);
+/* Send data */
+void CANHA_WriteRefresh(void);
+void CANHA_WriteSingleIndication(uint_least32_t ObjectNumber, bool NewState);
+void CANHA_WriteMeasuredValue16(uint_least32_t ObjectNumber, int16_t NewValue);
+void CANHA_WriteMeasuredValue32(uint_least32_t ObjectNumber, int32_t NewValue);
+bool CANHA_GetMsgFromTxBuf(CanHA_MsgTypeDef *GetMessage);
 void CANHA_MsgSent(void);
+void CANHA_PutMsgToTxBuf(uint_least16_t MessageType, uint_least32_t Identifier, uint_least8_t DataLength, uint_least8_t *Data);
 
-void CAN_TxMsgHandle(uint_least16_t Typ, uint_least8_t Rtr, uint_least8_t Length, uint_least32_t Id, uint_least8_t *Data);
-void CAN_RxMsgHandle(void);
+/* Receibe Data */
+void CANHA_ReadRefresh(void);
+bool CANHA_GetMsgFromRxBuf(CanHA_MsgTypeDef *GetMessage);
+void CANHA_PutMsgToRxBuf(CanHA_MsgTypeDef *GetMessage); /* Insert in Can rx interrupt */
 
 #endif /* CAN_HA_PROTOCOL_H_ */
