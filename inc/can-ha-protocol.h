@@ -174,6 +174,8 @@ void CANHA_PutMsgToTxBuf(uint_least16_t MessageType, uint_least32_t Identifier, 
 
 /* Receibe Data */
 void CANHA_ReadRefresh(void);
+bool CANHA_ReadSingleIndication(uint_fast8_t ObjectNumber);
+int_least16_t CANHA_ReadMeasuredValue16(uint_fast8_t ObjectNumber);
 bool CANHA_GetMsgFromRxBuf(CanHA_MsgTypeDef *GetMessage);
 void CANHA_PutMsgToRxBuf(CanHA_MsgTypeDef *GetMessage); /* Insert in Can rx interrupt */
 
