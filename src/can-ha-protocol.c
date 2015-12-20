@@ -465,8 +465,6 @@ volatile uint_fast8_t CAN_TxMsg_RdIndex = 0;
 volatile uint32_t UnixTimestamp = 1000000;
 
 /* Private function prototypes -----------------------------------------------*/
-int_fast16_t FindIdentifier(uint32_t Identifier, uint_fast8_t SizeOfArrayMember,
-                            const uint_least32_t *StartAdress, uint_fast8_t ArraySize);
 /* Private functions ---------------------------------------------------------*/
 /**
   * @brief  Periodic send of Data. Should be start every second.
@@ -518,7 +516,7 @@ void CANHA_WriteRefresh(void) {
     Heartbeat_Cnt++;
     if (Heartbeat_Cnt > HEARTBEAT_TIME - 1) {
         Heartbeat_Cnt = 0;
-        uint_least8_t Status = TRUE;
+        uint_least8_t Status = true;
         CANHA_PutMsgToTxBuf(TYPE_HEARTBEAT, NODE_ID, LENGTH_HEARTBEAT, &Status);
     }
 }
@@ -588,9 +586,9 @@ bool CANHA_GetMsgFromTxBuf(CanHA_MsgTypeDef *GetMessage) {
             GetMessage->Data[i] = CAN_TxMsgBuf[CAN_TxMsg_RdIndex].Data[i];
         }
 
-        return TRUE;
+        return true;
     } else {
-        return FALSE;
+        return false;
     }
 }
 
@@ -601,9 +599,7 @@ bool CANHA_GetMsgFromTxBuf(CanHA_MsgTypeDef *GetMessage) {
   */
 void CANHA_MsgSent(void) {
     CAN_TxMsg_RdIndex++;
-    if (CAN_TxMsg_RdIndex >= CAN_BUFFER_SIZE) {
-        CAN_TxMsg_RdIndex = 0;
-    }
+    CAN_TxMsg_RdIndex %= CAN_BUFFER_SIZE;
 }
 
 /**
@@ -625,9 +621,7 @@ void CANHA_PutMsgToTxBuf(uint_least16_t MessageType, uint_least32_t Identifier, 
     }
 
     CAN_TxMsg_WrIndex++;
-    if (CAN_TxMsg_WrIndex >= CAN_BUFFER_SIZE) {
-        CAN_TxMsg_WrIndex = 0;
-    }
+    CAN_TxMsg_WrIndex %= CAN_BUFFER_SIZE;
 }
 
 /**
@@ -640,22 +634,40 @@ void CANHA_ReadRefresh(void) {
     while (CANHA_GetMsgFromRxBuf(&Msg)) {
         switch (Msg.MessageType) {
             case TYPE_SINGLE_INDICATION: {
+                for (uint_fast8_t i = 0; i < RX_SINGLE_INDICATION_SIZE; i++) {
+                    if (Msg.Identifier == RX_Single_Indication[i].Identifier) {
+                        RX_Single_Indication[i].Timestamp = UnixTimestamp;
+                        RX_Single_Indication[i].State = Msg.Data[0];
+                    }
+                }
+
+                #ifdef FIND_IDENTIFIER
                 int_fast16_t TmpId = FindIdentifier(Msg.Identifier, sizeof(SingleIndication_TypeDef),
                                                     &RX_Single_Indication[0].Identifier, RX_SINGLE_INDICATION_SIZE);
                 if (TmpId >= 0) {
                     RX_Single_Indication[TmpId].Timestamp = UnixTimestamp;
                     RX_Single_Indication[TmpId].State = Msg.Data[0];
                 }
+                #endif /* FIND_IDENTIFIER */
                 break;
             }
             
             case TYPE_DOUBLE_INDICATION: {
+                for (uint_fast8_t i = 0; i < RX_DOUBLE_INDICATION_SIZE; i++) {
+                    if (Msg.Identifier == RX_Double_Indication[i].Identifier) {
+                        RX_Double_Indication[i].Timestamp = UnixTimestamp;
+                        RX_Double_Indication[i].State = Msg.Data[0];
+                    }
+                }
+                
+                #ifdef FIND_IDENTIFIER
                 int_fast16_t TmpId = FindIdentifier(Msg.Identifier, sizeof(DoubleIndication_TypeDef),
                                                     &RX_Double_Indication[0].Identifier, RX_DOUBLE_INDICATION_SIZE);
                 if (TmpId >= 0) {
                     RX_Single_Indication[TmpId].Timestamp = UnixTimestamp;
                     RX_Single_Indication[TmpId].State = Msg.Data[0];
                 }
+                #endif /* FIND_IDENTIFIER */
                 break;
             }
             
@@ -664,18 +676,18 @@ void CANHA_ReadRefresh(void) {
                 for (uint_fast8_t i = 0; i < RX_MEASURED_VALUE_16_SIZE; i++) {
                     if (Msg.Identifier == RX_Measured_Value_16[i].Identifier) {
                         RX_Measured_Value_16[i].Timestamp = UnixTimestamp;
-                        RX_Measured_Value_16[i].Value = (Msg.Data[0] << 8) | Msg.Data[1];
+                        RX_Measured_Value_16[i].Value = (int_least16_t)((Msg.Data[0] << 8) | Msg.Data[1]);
                     }
                 }
-                #if 0
+                #ifdef FIND_IDENTIFIER
                 int_fast16_t TmpId = FindIdentifier(Msg.Identifier, sizeof(MeasuredValue16_TypeDef),
                                                     &RX_Measured_Value_16[0].Identifier, RX_MEASURED_VALUE_16_SIZE);
                 if (TmpId >= 0) {
                     RX_Measured_Value_16[TmpId].Timestamp = UnixTimestamp;
                     RX_Measured_Value_16[TmpId].Value = (Msg.Data[0] << 8) | Msg.Data[1];
                 }
+                #endif /* FIND_IDENTIFIER */
                 break;
-                #endif /* 0 */
             }
             
             default: break;
@@ -687,10 +699,15 @@ bool CANHA_ReadSingleIndication(uint_fast8_t ObjectNumber) {
     return RX_Single_Indication[ObjectNumber].State;
 }
 
-
-int_least16_t CANHA_ReadMeasuredValue16(uint_fast8_t ObjectNumber) {
-    return RX_Measured_Value_16[ObjectNumber].Value;
+bool CANHA_ReadMeasuredValue16(uint_fast8_t ObjectNumber, int_least16_t *Value) {
+    if (RX_Measured_Value_16[ObjectNumber].Timestamp > 0) {
+        *Value = RX_Measured_Value_16[ObjectNumber].Value;
+        return true;
+    } else {
+        return false;
+    }
 }
+
 
 /**
   * @brief  Copy message from receive buffer if there is a new message.
@@ -707,10 +724,13 @@ bool CANHA_GetMsgFromRxBuf(CanHA_MsgTypeDef *GetMessage) {
         for (uint_fast8_t i = 0; i < CAN_RxMsgBuf[CAN_RxMsg_RdIndex].DataLength; i++) {
             GetMessage->Data[i] = CAN_RxMsgBuf[CAN_RxMsg_RdIndex].Data[i];
         }
+        
+        CAN_RxMsg_RdIndex++;
+        CAN_RxMsg_RdIndex %= CAN_BUFFER_SIZE;
 
-        return TRUE;
+        return true;
     } else {
-        return FALSE;
+        return false;
     }
 }
 
@@ -721,27 +741,19 @@ bool CANHA_GetMsgFromRxBuf(CanHA_MsgTypeDef *GetMessage) {
   */
 void CANHA_PutMsgToRxBuf(CanHA_MsgTypeDef *GetMessage) {
     /* Copy received message into buffer */
+    #if 0
     memcpy(&CAN_RxMsgBuf[CAN_RxMsg_WrIndex], GetMessage, sizeof(CanHA_MsgTypeDef));
+    #endif /* 0 */
+    
+    CAN_RxMsgBuf[CAN_RxMsg_WrIndex].MessageType = GetMessage->MessageType;
+    CAN_RxMsgBuf[CAN_RxMsg_WrIndex].Identifier = GetMessage->Identifier;
+    CAN_RxMsgBuf[CAN_RxMsg_WrIndex].DataLength = GetMessage->DataLength;
+    
+    for (uint_fast8_t i = 0; i < GetMessage->DataLength; i++) {
+        CAN_RxMsgBuf[CAN_RxMsg_WrIndex].Data[i] = GetMessage->Data[i];
+    }
     
     /* Move buffer index to next entry */
     CAN_RxMsg_WrIndex++;
-
-    if (CAN_RxMsg_WrIndex >= CAN_BUFFER_SIZE) {
-        CAN_RxMsg_WrIndex = 0;
-    }
-}
-
-int_fast16_t FindIdentifier(uint32_t Identifier, uint_fast8_t SizeOfArrayMember, const uint_least32_t *StartAdress, uint_fast8_t ArraySize) {
-    for (uint_fast8_t i = 0; i < ArraySize; i++) {
-        /* Check identifier */
-        if (*StartAdress == Identifier) {
-            return i;
-        }
-    
-        /* Increase pointer to next array member */
-        for (uint_fast8_t j = SizeOfArrayMember / 4; j != 0; j--) {
-            StartAdress++;
-        }
-    }
-    return -1;
+    CAN_RxMsg_WrIndex %= CAN_BUFFER_SIZE;
 }

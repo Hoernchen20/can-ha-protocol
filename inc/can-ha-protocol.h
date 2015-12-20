@@ -31,20 +31,18 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
+#include <stdbool.h>
 #include <string.h>
+#include <time.h>
 #include "can-ha-protocol-conf.h"
 
 /* Exported constants --------------------------------------------------------*/
-#define CAN_BUFFER_SIZE           10
+#define CAN_BUFFER_SIZE 8
 
 /* Exported variables --------------------------------------------------------*/
 extern volatile uint32_t UnixTimestamp;
 
 /* Exported types ------------------------------------------------------------*/
-#ifndef BOOL
-    #define BOOL
-    typedef enum { FALSE, TRUE }bool;
-#endif
 
 /* Functionpointer */
 typedef void (*SingleCommand_Function) (uint_least8_t);
@@ -172,10 +170,10 @@ bool CANHA_GetMsgFromTxBuf(CanHA_MsgTypeDef *GetMessage);
 void CANHA_MsgSent(void);
 void CANHA_PutMsgToTxBuf(uint_least16_t MessageType, uint_least32_t Identifier, uint_least8_t DataLength, uint_least8_t *Data);
 
-/* Receibe Data */
+/* Receive Data */
 void CANHA_ReadRefresh(void);
 bool CANHA_ReadSingleIndication(uint_fast8_t ObjectNumber);
-int_least16_t CANHA_ReadMeasuredValue16(uint_fast8_t ObjectNumber);
+bool CANHA_ReadMeasuredValue16(uint_fast8_t ObjectNumber, int_least16_t *Value);
 bool CANHA_GetMsgFromRxBuf(CanHA_MsgTypeDef *GetMessage);
 void CANHA_PutMsgToRxBuf(CanHA_MsgTypeDef *GetMessage); /* Insert in Can rx interrupt */
 
