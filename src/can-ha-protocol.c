@@ -74,7 +74,7 @@ static bool isTimestampMatch(uint32_t Timestamp, uint32_t ArrayTimestamp);
 /**********************************************************************/
 
 /**
-  * @brief  Periodic send of heartbeat. Should be start every second.
+  * @brief  Periodic send of heartbeat. Must be started once per second.
   * @param  None
   * @retval None
   */
@@ -90,18 +90,25 @@ void CANHA_Heartbeat(void) {
 
 /**
   * @brief  This function change state of the single indications and send them.
-  * @param  State: Can be TRUE or FALSE.
+  * @param  ArrayMember: Pointer to single indication.
+  * @param  NewState: Can be TRUE or FALSE.
   * @retval None
   */
-void CANHA_WriteSingleIndication(SingleIndication_TypeDef *Array, bool NewState) {
-    if (Array->State != NewState) {
-        Array->State = NewState;
-        Array->Timestamp = UnixTimestamp - 1;
-        CANHA_PutMsgToTxBuf(TYPE_SINGLE_INDICATION, Array->Identifier,
-                LENGTH_SINGLE_INDICATION, (uint_least8_t*)Array->State);
+void CANHA_WriteSingleIndication(SingleIndication_TypeDef *ArrayMember, bool NewState) {
+    if (ArrayMember->State != NewState) {
+        ArrayMember->State = NewState;
+        ArrayMember->Timestamp = UnixTimestamp - 1;
+        CANHA_PutMsgToTxBuf(TYPE_SINGLE_INDICATION, ArrayMember->Identifier,
+                LENGTH_SINGLE_INDICATION, (uint_least8_t*)ArrayMember->State);
     }
 }
 
+/**
+  * @brief  Periodic send of single indications. Must be started once per second.
+  * @param  Array: Pointer to array of single indications.
+  * @param  Size: Size of array.
+  * @retval None
+  */
 void CANHA_RefreshSingleIndication(SingleIndication_TypeDef *Array, uint_fast8_t Size) {
     uint32_t tmp_RTC_Counter = UnixTimestamp;
     for (uint_fast8_t i = 0; i < Size; i++) {
@@ -112,15 +119,28 @@ void CANHA_RefreshSingleIndication(SingleIndication_TypeDef *Array, uint_fast8_t
     }
 }
 
-void CANHA_WriteDoubleIndication(DoubleIndication_TypeDef *Array, uint_least8_t NewState) {
-    if (Array->State != NewState) {
-        Array->State = NewState;
-        Array->Timestamp = UnixTimestamp - 1;
-        CANHA_PutMsgToTxBuf(TYPE_DOUBLE_INDICATION, Array->Identifier,
-                LENGTH_DOUBLE_INDICATION, &Array->State);
+/**
+  * @brief  This function change state of the double indications and send them.
+  * @param  ArrayMember: Pointer to double indication.
+  * @param  NewState: Can be 0b00, 0b01, 0b10 or 0b11.
+  * @retval None
+  */
+void CANHA_WriteDoubleIndication(DoubleIndication_TypeDef *ArrayMember, uint_least8_t NewState) {
+    //TODO Check value of NewState
+    if (ArrayMember->State != NewState) {
+        ArrayMember->State = NewState;
+        ArrayMember->Timestamp = UnixTimestamp - 1;
+        CANHA_PutMsgToTxBuf(TYPE_DOUBLE_INDICATION, ArrayMember->Identifier,
+                LENGTH_DOUBLE_INDICATION, &ArrayMember->State);
     }
 }
 
+/**
+  * @brief  Periodic send of double indications. Must be started once per second.
+  * @param  Array: Pointer to array of double indications.
+  * @param  Size: Size of array.
+  * @retval None
+  */
 void CANHA_RefreshDoubleIndication(DoubleIndication_TypeDef *Array, uint_fast8_t Size) {
     uint32_t tmp_RTC_Counter = UnixTimestamp;
     for (uint_fast8_t i = 0; i < Size; i++) {
@@ -133,21 +153,28 @@ void CANHA_RefreshDoubleIndication(DoubleIndication_TypeDef *Array, uint_fast8_t
 
 /**
   * @brief  This function change value of the 16bit measured value and send them.
-  * @param  New Value: Fix Point Value e.g. 21,53°C = 2153
+  * @param  ArrayMember: Pointer to 16bit measured value.
+  * @param  NewValue: Fix Point Value e.g. 21,53°C = 2153
   * @retval None
   */
-void CANHA_WriteMeasuredValue16(MeasuredValue16_TypeDef *Array, int16_t NewValue) {
-    if (Array->Value != NewValue) {
-        Array->Value = NewValue;
-        Array->Timestamp = UnixTimestamp - 1;
+void CANHA_WriteMeasuredValue16(MeasuredValue16_TypeDef *ArrayMember, int16_t NewValue) {
+    if (ArrayMember->Value != NewValue) {
+        ArrayMember->Value = NewValue;
+        ArrayMember->Timestamp = UnixTimestamp - 1;
 
         uint_least8_t tmp[2];
-        tmp[1] = (uint8_t)(Array->Value);
-        tmp[0] = (uint8_t)(Array->Value>>8);
-        CANHA_PutMsgToTxBuf(TYPE_MEASURED_VALUE_16, Array->Identifier, LENGTH_MEASURED_VALUE_16, tmp);
+        tmp[1] = (uint8_t)(ArrayMember->Value);
+        tmp[0] = (uint8_t)(ArrayMember->Value>>8);
+        CANHA_PutMsgToTxBuf(TYPE_MEASURED_VALUE_16, ArrayMember->Identifier, LENGTH_MEASURED_VALUE_16, tmp);
     }
 }
 
+/**
+  * @brief  Periodic send of 16bit measured value. Must be started once per second.
+  * @param  Array: Pointer to array of 16bit measured values.
+  * @param  Size: Size of array.
+  * @retval None
+  */
 void CANHA_RefreshMeasuredValue16(MeasuredValue16_TypeDef *Array, uint_fast8_t Size) {
     uint32_t tmp_RTC_Counter = UnixTimestamp;
     for (uint_fast8_t i = 0; i < Size; i++) {
@@ -163,23 +190,30 @@ void CANHA_RefreshMeasuredValue16(MeasuredValue16_TypeDef *Array, uint_fast8_t S
 
 /**
   * @brief  This function change value of the 32bit measured value and send them.
+  * @param  ArrayMember: Pointer to 32bit measured value.
   * @param  New Value: Floating Point Value
   * @retval None
   */
-void CANHA_WriteMeasuredValue32(MeasuredValue32_TypeDef *Array, int32_t NewValue) {
-    if (Array->Value != NewValue) {
-        Array->Value = NewValue;
-        Array->Timestamp = UnixTimestamp - 1;
+void CANHA_WriteMeasuredValue32(MeasuredValue32_TypeDef *ArrayMember, int32_t NewValue) {
+    if (ArrayMember->Value != NewValue) {
+        ArrayMember->Value = NewValue;
+        ArrayMember->Timestamp = UnixTimestamp - 1;
 
         uint_least8_t tmp[4];
-        tmp[3] = (uint8_t)(Array->Value);
-        tmp[2] = (uint8_t)(Array->Value>>8);
-        tmp[1] = (uint8_t)(Array->Value>>16);
-        tmp[0] = (uint8_t)(Array->Value>>24);
-        CANHA_PutMsgToTxBuf(TYPE_MEASURED_VALUE_32, Array->Identifier, LENGTH_MEASURED_VALUE_32, tmp);
+        tmp[3] = (uint8_t)(ArrayMember->Value);
+        tmp[2] = (uint8_t)(ArrayMember->Value>>8);
+        tmp[1] = (uint8_t)(ArrayMember->Value>>16);
+        tmp[0] = (uint8_t)(ArrayMember->Value>>24);
+        CANHA_PutMsgToTxBuf(TYPE_MEASURED_VALUE_32, ArrayMember->Identifier, LENGTH_MEASURED_VALUE_32, tmp);
     }
 }
 
+/**
+  * @brief  Periodic send of 32bit measured value. Must be started once per second.
+  * @param  Array: Pointer to array of 32bit measured values.
+  * @param  Size: Size of array.
+  * @retval None
+  */
 void CANHA_RefreshMeasuredValue32(MeasuredValue32_TypeDef *Array, uint_fast8_t Size) {
     uint32_t tmp_RTC_Counter = UnixTimestamp;
     for (uint_fast8_t i = 0; i < Size; i++) {
@@ -195,6 +229,13 @@ void CANHA_RefreshMeasuredValue32(MeasuredValue32_TypeDef *Array, uint_fast8_t S
     }
 }
 
+/**
+  * @brief  Check if the ArrayTimestamp matches the refresh time.
+  * @param  Timestamp: Actual time in unix timestamp format
+  * @param  ArrayTimestamp: Timestamp of array member in unix timestamp format
+  * @retval true = ArrayTimestamp matches the REFRESH_TIME
+            false = no match
+  */
 static bool isTimestampMatch(uint32_t Timestamp, uint32_t ArrayTimestamp) {
     if ( (Timestamp - ArrayTimestamp) % (REFRESH_TIME + 1) == 0) {
         return true;
@@ -288,6 +329,13 @@ bool CANHA_ReadSingleIndication(uint_fast8_t ObjectNumber) {
 }
 #endif /* NUMBER_RECEIVE_SINGLE_INDICATION > 0 */
 
+/**
+  * @brief  Read 16bit measured value.
+  * @param  
+  * @param  
+  * @retval true = Measured value is copied to Value
+    @retval false = Measured value isn't copied, because it is to old
+  */
 bool CANHA_ReadMeasuredValue16(uint_fast8_t ObjectNumber, int_least16_t *Value) {
     if (RX_Measured_Value_16[ObjectNumber].Timestamp > 0) {
         *Value = RX_Measured_Value_16[ObjectNumber].Value;
@@ -326,7 +374,7 @@ bool CANHA_GetMsgFromTxBuf(CanHA_MsgTypeDef *GetMessage) {
 }
 
 /**
-  * @brief  Increase read index of transmite buffer if message sent.
+  * @brief  Increase read index of transmit buffer.
   * @param  None
   * @retval None
   */
@@ -336,7 +384,7 @@ void CANHA_MsgSent(void) {
 }
 
 /**
-  * @brief  Put new message in transmite buffer.
+  * @brief  Put new message in transmit buffer.
   * @param  MessageType: This parameter can be a value of @ref CANHA_Message_Types
   * @param  Identifier:
   * @param  DataLength: This parameter can be a value of @ref CANHA_Data_Length

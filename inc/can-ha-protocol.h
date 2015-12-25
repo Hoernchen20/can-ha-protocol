@@ -43,7 +43,7 @@
 #define NUMBER_TRANSMIT_SINGLE_INDICATON    4
 #define NUMBER_TRANSMIT_DOUBLE_INDICATON    0
 #define NUMBER_TRANSMIT_MEASURED_VALUE_16   2
-#define NUMBER_TRANSMIT_MEASURED_VALUE_32    0
+#define NUMBER_TRANSMIT_MEASURED_VALUE_32   0
 
 #define NUMBER_RECEIVE_SINGLE_INDICATION    0
 #define NUMBER_RECEIVE_DOUBLE_INDICATION    0
@@ -201,16 +201,16 @@ extern SetPoint32_TypeDef RX_SetPoint32[NUMBER_RECEIVE_SETPOINT_32];
 /* Send data */
 void CANHA_Heartbeat(void);
 
-void CANHA_WriteSingleIndication(SingleIndication_TypeDef *Array, bool NewState);
+void CANHA_WriteSingleIndication(SingleIndication_TypeDef *ArrayMember, bool NewState);
 void CANHA_RefreshSingleIndication(SingleIndication_TypeDef *Array, uint_fast8_t Size);
 
-void CANHA_WriteDoubleIndication(DoubleIndication_TypeDef *Array, uint_least8_t NewState);
+void CANHA_WriteDoubleIndication(DoubleIndication_TypeDef *ArrayMember, uint_least8_t NewState);
 void CANHA_RefreshDoubleIndication(DoubleIndication_TypeDef *Array, uint_fast8_t Size);
 
-void CANHA_WriteMeasuredValue16(MeasuredValue16_TypeDef *Array, int16_t NewValue);
+void CANHA_WriteMeasuredValue16(MeasuredValue16_TypeDef *ArrayMember, int16_t NewValue);
 void CANHA_RefreshMeasuredValue16(MeasuredValue16_TypeDef *Array, uint_fast8_t Size);
 
-void CANHA_WriteMeasuredValue32(MeasuredValue32_TypeDef *Array, int32_t NewValue);
+void CANHA_WriteMeasuredValue32(MeasuredValue32_TypeDef *ArrayMember, int32_t NewValue);
 void CANHA_RefreshMeasuredValue32(MeasuredValue32_TypeDef *Array, uint_fast8_t Size);
 
 bool CANHA_GetMsgFromTxBuf(CanHA_MsgTypeDef *GetMessage);
