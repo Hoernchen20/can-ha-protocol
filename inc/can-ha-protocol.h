@@ -177,4 +177,8 @@ bool CANHA_ReadMeasuredValue16(uint_fast8_t ObjectNumber, int_least16_t *Value);
 bool CANHA_GetMsgFromRxBuf(CanHA_MsgTypeDef *GetMessage);
 void CANHA_PutMsgToRxBuf(CanHA_MsgTypeDef *GetMessage); /* Insert in Can rx interrupt */
 
+/* Unix Timestamp */
+void CANHA_IncUnixTimestamp(void);
+void CANHA_SetUnixTimestamp(uint_least32_t NewTimestamp);
+uint_least32_t CANHA_GetUnixTimestamp(void);
 #endif /* CAN_HA_PROTOCOL_H_ */

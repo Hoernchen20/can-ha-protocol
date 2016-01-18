@@ -462,7 +462,7 @@ CanHA_MsgTypeDef CAN_TxMsgBuf[CAN_BUFFER_SIZE];
 volatile uint_fast8_t CAN_TxMsg_WrIndex = 0;
 volatile uint_fast8_t CAN_TxMsg_RdIndex = 0;
 
-volatile uint32_t UnixTimestamp = 1000000;
+static uint_least32_t UnixTimestamp = 1000000;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -756,4 +756,38 @@ void CANHA_PutMsgToRxBuf(CanHA_MsgTypeDef *GetMessage) {
     /* Move buffer index to next entry */
     CAN_RxMsg_WrIndex++;
     CAN_RxMsg_WrIndex %= CAN_BUFFER_SIZE;
+}  
+
+/**********************************************************************/
+/**                                                                  **/
+/**                          Unix Timestamp                          **/
+/**                                                                  **/
+/**********************************************************************/
+/**
+  * @brief  Increase global timestamp variable.
+  * @param  None
+  * @retval None
+  */
+void CANHA_IncUnixTimestamp(void) {
+    UnixTimestamp++;
+}
+
+/**
+  * @brief  Write new time to global timestamp variable.
+  * @param  NewTimestamp: Time in seconds
+  * @retval None
+  */
+void CANHA_SetUnixTimestamp(uint_least32_t NewTimestamp) {
+    if (NewTimestamp > 0) {
+        UnixTimestamp = NewTimestamp;
+    }
+}
+
+/**
+  * @brief  Return global timestamp variable.
+  * @param  None
+  * @retval Time in seconds
+  */
+uint_least32_t CANHA_GetUnixTimestamp(void) {
+    return UnixTimestamp;
 }
