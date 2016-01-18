@@ -39,8 +39,43 @@
 /* Exported constants --------------------------------------------------------*/
 #define CAN_BUFFER_SIZE 8
 
-/* Exported variables --------------------------------------------------------*/
-extern volatile uint32_t UnixTimestamp;
+/* Uncomment used */
+#define NUMBER_TRANSMIT_SINGLE_INDICATON    4
+#define NUMBER_TRANSMIT_DOUBLE_INDICATON    0
+#define NUMBER_TRANSMIT_MEASURED_VALUE_16   2
+#define NUMBER_TRANSMIT_MEASURED_VALUE_32   0
+
+#define NUMBER_RECEIVE_SINGLE_INDICATION    0
+#define NUMBER_RECEIVE_DOUBLE_INDICATION    0
+#define NUMBER_RECEIVE_MEASURED_VALUE_16    1
+#define NUMBER_RECEIVE_MEASURED_VALUE_32    0
+#define NUMBER_RECEIVE_SETPOINT_16          1
+#define NUMBER_RECEIVE_SETPOINT_32          0
+
+/** @defgroup CANHA_Message_Types
+  * @{
+  */
+#define TYPE_MEASURED_VALUE_16       2030    //0b0111 1110 1110, 0x7EE
+#define TYPE_MV_16                   2030    //0b0111 1110 1110, 0x7EE
+#define TYPE_MEASURED_VALUE_32       2020    //0b0111 1110 0100, 0x7E4
+#define TYPE_MV_32                   2020    //0b0111 1110 0100, 0x7E4
+#define TYPE_SETPOINT_COMMAND_16     2010    //0b0111 1101 1010, 0x7DA
+#define TYPE_SPC_16                  2010    //0b0111 1101 1010, 0x7DA
+#define TYPE_SETPOINT_COMMAND_32     2000    //0b0111 1101 0000, 0x7D0
+#define TYPE_SPC_32                  2000    //0b0111 1101 0000, 0x7D0
+#define TYPE_SINGLE_INDICATION       1990    //0b0111 1100 0110, 0x7C6
+#define TYPE_SI                      1990    //0b0111 1100 0110, 0x7C6
+#define TYPE_DOUBLE_INDICATION       1980    //0b0111 1011 1100, 0x7BC
+#define TYPE_DI                      1980    //0b0111 1011 1100, 0x7BC
+#define TYPE_SINGLE_COMMAND          1970    //0b0111 1011 0010, 0x7B2
+#define TYPE_SC                      1970    //0b0111 1011 0010, 0x7B2
+#define TYPE_DOUBLE_COMMAND          1960    //0b0111 1010 1000, 0x7A8
+#define TYPE_DC                      1960    //0b0111 1010 1000, 0x7A8
+#define TYPE_CLOCK_SYNC              1950    //0b0111 1001 1110, 0x79E
+#define TYPE_HEARTBEAT               1940    //0b0111 1001 0100, 0x794
+/**
+  * @}
+  */
 
 /* Exported types ------------------------------------------------------------*/
 
@@ -59,8 +94,7 @@ typedef void (*SetPoint32_Function) (int32_t);
 typedef struct {
     const uint_least32_t    Identifier;
     uint32_t                Timestamp;
-    uint8_t                 State;
-    uint_least8_t           padding[3];
+    bool                    State;
 }SingleIndication_TypeDef;
 
 /**
@@ -72,7 +106,6 @@ typedef struct {
     const uint_least32_t    Identifier;
     uint32_t                Timestamp;
     uint_least8_t           State;
-    uint_least8_t           padding[3];
 }DoubleIndication_TypeDef;
 
 /**
@@ -85,7 +118,6 @@ typedef struct {
     const uint_least32_t    Identifier;
     uint32_t                Timestamp;
     int_least16_t           Value;
-    uint_least8_t           padding[2];
 }MeasuredValue16_TypeDef;
 
 /**
@@ -106,9 +138,7 @@ typedef struct {
   */
 typedef struct {
     const uint_least32_t    Identifier;
-    SingleCommand_Function  Function;
-    int_least8_t            State;
-    uint_least8_t           padding[3];
+    const SingleCommand_Function  Function;
 }SingleCommand_TypeDef;
 
 /**
@@ -118,9 +148,7 @@ typedef struct {
   */
 typedef struct {
     const uint_least32_t    Identifier;
-    DoubleCommand_Function  Function;
-    int_least8_t            State;
-    uint_least8_t           padding[3];
+    const DoubleCommand_Function  Function;
 }DoubleCommand_TypeDef;
 
 /**
@@ -131,9 +159,7 @@ typedef struct {
   */
 typedef struct {
     const uint_least32_t    Identifier;
-    SetPoint16_Function     Function;
-    int_least16_t           Value;
-    uint_least8_t           padding[2];
+    const SetPoint16_Function     Function;
 }SetPoint16_TypeDef;
 
 /**
@@ -143,8 +169,7 @@ typedef struct {
   */
 typedef struct {
     const uint_least32_t    Identifier;
-    SetPoint32_Function     Function;
-    int_least32_t           Value;
+    const SetPoint32_Function     Function;
 }SetPoint32_TypeDef;
 
 /**
@@ -159,13 +184,35 @@ typedef struct {
   uint_least8_t             Data[8];
 }CanHA_MsgTypeDef;
 
+/* Exported variables --------------------------------------------------------*/
+extern volatile uint32_t UnixTimestamp;
+//extern SingleIndication_TypeDef TX_Single_Indication[NUMBER_TRANSMIT_SINGLE_INDICATON];
+extern DoubleIndication_TypeDef TX_Double_Indication[NUMBER_TRANSMIT_DOUBLE_INDICATON];
+//extern MeasuredValue16_TypeDef TX_Measured_Value_16[NUMBER_TRANSMIT_MEASURED_VALUE_16];
+extern MeasuredValue32_TypeDef TX_Measured_Value_32[NUMBER_TRANSMIT_MEASURED_VALUE_32];
+extern SingleIndication_TypeDef RX_Single_Indication[NUMBER_RECEIVE_SINGLE_INDICATION];
+extern MeasuredValue16_TypeDef RX_Measured_Value_16[NUMBER_RECEIVE_MEASURED_VALUE_16];
+extern MeasuredValue32_TypeDef RX_Measured_Value_32[NUMBER_RECEIVE_MEASURED_VALUE_32];
+extern SetPoint16_TypeDef RX_SetPoint16[NUMBER_RECEIVE_SETPOINT_16];
+extern SetPoint32_TypeDef RX_SetPoint32[NUMBER_RECEIVE_SETPOINT_32];
+
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 /* Send data */
-void CANHA_WriteRefresh(void);
-void CANHA_WriteSingleIndication(uint_least32_t ObjectNumber, bool NewState);
-void CANHA_WriteMeasuredValue16(uint_least32_t ObjectNumber, int16_t NewValue);
-void CANHA_WriteMeasuredValue32(uint_least32_t ObjectNumber, int32_t NewValue);
+void CANHA_Heartbeat(void);
+
+void CANHA_WriteSingleIndication(SingleIndication_TypeDef *ArrayMember, bool NewState);
+void CANHA_RefreshSingleIndication(SingleIndication_TypeDef *Array, uint_fast8_t Size);
+
+void CANHA_WriteDoubleIndication(DoubleIndication_TypeDef *ArrayMember, uint_least8_t NewState);
+void CANHA_RefreshDoubleIndication(DoubleIndication_TypeDef *Array, uint_fast8_t Size);
+
+void CANHA_WriteMeasuredValue16(MeasuredValue16_TypeDef *ArrayMember, int16_t NewValue);
+void CANHA_RefreshMeasuredValue16(MeasuredValue16_TypeDef *Array, uint_fast8_t Size);
+
+void CANHA_WriteMeasuredValue32(MeasuredValue32_TypeDef *ArrayMember, int32_t NewValue);
+void CANHA_RefreshMeasuredValue32(MeasuredValue32_TypeDef *Array, uint_fast8_t Size);
+
 bool CANHA_GetMsgFromTxBuf(CanHA_MsgTypeDef *GetMessage);
 void CANHA_MsgSent(void);
 void CANHA_PutMsgToTxBuf(uint_least16_t MessageType, uint_least32_t Identifier, uint_least8_t DataLength, uint_least8_t *Data);
