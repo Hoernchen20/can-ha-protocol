@@ -62,7 +62,8 @@ CanHA_MsgTypeDef CAN_TxMsgBuf[CAN_BUFFER_SIZE];
 volatile uint_fast8_t CAN_TxMsg_WrIndex = 0;
 volatile uint_fast8_t CAN_TxMsg_RdIndex = 0;
 
-static uint_least32_t UnixTimestamp = 1000000;
+static uint_least32_t UnixTimestamp = 1451606400;
+static bool UnixTimestampIsActual = false;
 
 /* Private function prototypes ---------------------------------------*/
 static bool isTimestampMatch(uint32_t Timestamp, uint32_t ArrayTimestamp);
@@ -99,7 +100,7 @@ void CANHA_WriteSingleIndication(SingleIndication_TypeDef *ArrayMember, bool New
         ArrayMember->State = NewState;
         ArrayMember->Timestamp = UnixTimestamp - 1;
         CANHA_PutMsgToTxBuf(TYPE_SINGLE_INDICATION, ArrayMember->Identifier,
-                LENGTH_SINGLE_INDICATION, (uint_least8_t*)ArrayMember->State);
+                LENGTH_SINGLE_INDICATION, &ArrayMember->State);
     }
 }
 
@@ -113,7 +114,7 @@ void CANHA_RefreshSingleIndication(SingleIndication_TypeDef *Array, uint_fast8_t
     uint32_t tmp_RTC_Counter = UnixTimestamp;
     for (uint_fast8_t i = 0; i < Size; i++) {
         if (isTimestampMatch(tmp_RTC_Counter, Array->Timestamp)) {
-            CANHA_PutMsgToTxBuf(TYPE_SINGLE_INDICATION, Array->Identifier, LENGTH_SINGLE_INDICATION, (uint_least8_t*)Array->State);
+            CANHA_PutMsgToTxBuf(TYPE_SINGLE_INDICATION, Array->Identifier, LENGTH_SINGLE_INDICATION, &Array->State);
         }
         Array++;
     }
@@ -318,6 +319,20 @@ void CANHA_ReadRefresh(void) {
                 break;
             }
 #endif /* NUMBER_RECEIVE_SETPOINT_32 > 0 */
+            case TYPE_CLOCK_SYNC: {
+                struct tm time = {0};
+                time.tm_sec = Msg.Data[6];
+                time.tm_min = Msg.Data[5];
+                time.tm_hour = Msg.Data[4];
+                time.tm_mday = Msg.Data[2];
+                time.tm_mon = Msg.Data[1] - 1;
+                time.tm_year = Msg.Data[0] + 100;
+                time.tm_wday = Msg.Data[3];
+
+                CANHA_SetUnixTimestamp( (uint_least32_t)mktime(&time) );
+                break;
+            }
+
             default: break;
         }
     }
@@ -472,14 +487,20 @@ void CANHA_IncUnixTimestamp(void) {
 void CANHA_SetUnixTimestamp(uint_least32_t NewTimestamp) {
     if (NewTimestamp > 0) {
         UnixTimestamp = NewTimestamp;
+        UnixTimestampIsActual = true;
     }
 }
 
 /**
   * @brief  Return global timestamp variable.
   * @param  None
-  * @retval Time in seconds
+  * @retval Time in seconds or 0 if timestamp variable isn't up to date
   */
 uint_least32_t CANHA_GetUnixTimestamp(void) {
-    return UnixTimestamp;
+    if (UnixTimestampIsActual) {
+        return UnixTimestamp;
+    } else {
+        return 0;
+    }
+
 }

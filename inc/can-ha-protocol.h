@@ -94,7 +94,7 @@ typedef void (*SetPoint32_Function) (int32_t);
 typedef struct {
     const uint_least32_t    Identifier;
     uint32_t                Timestamp;
-    bool                    State;
+    uint_least8_t           State;
 }SingleIndication_TypeDef;
 
 /**
@@ -185,7 +185,6 @@ typedef struct {
 }CanHA_MsgTypeDef;
 
 /* Exported variables --------------------------------------------------------*/
-extern volatile uint32_t UnixTimestamp;
 //extern SingleIndication_TypeDef TX_Single_Indication[NUMBER_TRANSMIT_SINGLE_INDICATON];
 extern DoubleIndication_TypeDef TX_Double_Indication[NUMBER_TRANSMIT_DOUBLE_INDICATON];
 //extern MeasuredValue16_TypeDef TX_Measured_Value_16[NUMBER_TRANSMIT_MEASURED_VALUE_16];
